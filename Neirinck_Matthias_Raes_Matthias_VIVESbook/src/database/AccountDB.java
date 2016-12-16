@@ -45,7 +45,7 @@ public class AccountDB implements InterfaceAccountDB
                 catch (SQLException ex)
                 {
                     System.out.println(ex.getMessage());
-                    throw new DBException("SQLException in ZoekAccount - bij resultset \n" + ex.getMessage());
+                    throw new DBException("SQLException in ZoekAccount - bij resultset");
 
                 }
             }
@@ -56,7 +56,7 @@ public class AccountDB implements InterfaceAccountDB
         }
         catch (SQLException ex)
         {
-            throw new DBException("SQL-exception in zoekAccount - bij connectie \n" + ex.getMessage());
+            throw new DBException("SQL-exception in zoekAccount - bij connectie");
 
         }
         return returnacc;
@@ -65,7 +65,7 @@ public class AccountDB implements InterfaceAccountDB
     @Override
     public Account zoekAccountOpEmail(String email) throws DBException
     {
-        Account acc = null;
+        Account ac = null;
         try (Connection conn = ConnectionManager.getConnection();)
         {
             try
@@ -76,24 +76,24 @@ public class AccountDB implements InterfaceAccountDB
                 ResultSet r = stat.getResultSet();
                 if (r.next())
                 {
-                    acc.setEmailadres(r.getString("emailadres"));
-                    acc.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
-                    acc.setLogin(r.getString("login"));
-                    acc.setPaswoord(r.getString("paswoord"));
-                    acc.setNaam(r.getString("naam"));
-                    acc.setVoornaam(r.getString("voornaam"));
+                    ac.setEmailadres(r.getString("emailadres"));
+                    ac.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
+                    ac.setLogin(r.getString("login"));
+                    ac.setPaswoord(r.getString("paswoord"));
+                    ac.setNaam(r.getString("naam"));
+                    ac.setVoornaam(r.getString("voornaam"));
                 }
             }
-            catch (SQLException ex)
+            catch (SQLException e)
             {
-                throw new DBException("SQLException in zoekaccount bij prepare  \n" + ex.getMessage());
+                throw new DBException("SQLException in zoekaccount bij prepare");
             }
         }
         catch (SQLException ex)
         {
-            throw new DBException("SQL-exception in zoekaccount - bij connectie  \n" + ex.getMessage());
+            throw new DBException("SQL-exception in zoekaccount - bij connectie");
         }
-        return acc;
+        return ac;
     }
 
     @Override
@@ -108,23 +108,17 @@ public class AccountDB implements InterfaceAccountDB
                 stat.setString(3, account.getLogin());
                 stat.setString(4, account.getPaswoord());
                 stat.setString(5, account.getEmailadres());
-                
-                if(account.getGeslacht() == null){
-                    stat.setNull(6, java.sql.Types.NULL);
-                }else{
-                    stat.setString(6, account.getGeslacht().name()); // Geen toString() want deze kan aangepast worden, bv "Man" en "Vrouw" ipv "M" en "V"
-                }
-                
+                stat.setString(6, account.getGeslacht().toString());
                 stat.execute();
             }
             catch (SQLException ex)
             {
-                throw new DBException("SQL-exception in AccountToevoegen - at prepare \n" + ex.getMessage());
+                throw new DBException("SQL-exception in AccountToevoegen - at prepare");
             }
         }
         catch (SQLException ex)
         {
-            throw new DBException("SQL-exception in Toevoegen Account  - at connectie \n" + ex.getMessage());
+            throw new DBException("SQL-exception in Toevoegen Account  - at connectie");
         }
     }
 
@@ -135,7 +129,6 @@ public class AccountDB implements InterfaceAccountDB
         {
             try
             {
-                // NIET NODIG OM EMAIL VALID TE CHECKEN
                 PreparedStatement stat = conn.prepareStatement("Select * from account where emailadres = ?");
                 stat.setString(1, acc.getEmailadres());
                 stat.execute();
@@ -148,13 +141,7 @@ public class AccountDB implements InterfaceAccountDB
                     stat.setString(1, acc.getNaam());
                     stat.setString(2, acc.getVoornaam());
                     stat.setString(3, acc.getEmailadres());
-                    
-                    if (acc.getGeslacht() == null) {
-                        stat.setNull(5, java.sql.Types.NULL);
-                    } else {
-                        stat.setString(5, acc.getGeslacht().name());
-                    }
-                    
+                    stat.setString(4, acc.getGeslacht().toString());
                     stat.setString(5, acc.getPaswoord());
                     stat.setString(6, acc.getLogin());
                     stat.execute();
@@ -166,29 +153,13 @@ public class AccountDB implements InterfaceAccountDB
             }
             catch (SQLException ex)
             {
-                throw new DBException("SQL-exception in Toevoegen Account - at prepare statement \n" + ex.getMessage());
+                throw new DBException("SQL-exception in Toevoegen Account - at prepare statement");
             }
         }
         catch (SQLException ex)
         {
-            throw new DBException("SQL-exception in Toevoegen Account  - at connectie \n" + ex.getMessage());
+            throw new DBException("SQL-exception in Toevoegen Account  - at connectie");
 
-        }
-    }
-    
-    public void verwijderenAccount(Account teVerwijderenAccount) throws DBException{
-        try(Connection conn = ConnectionManager.getConnection();){
-            try(PreparedStatement stmt = conn.prepareStatement(
-                    "DELETE FROM account WHERE login = ?");){
-                
-                stmt.setString(1, teVerwijderenAccount.getLogin());
-                stmt.execute();
-                
-            }catch(SQLException ex){
-                throw new DBException("SQL-Exception in verwijderenAccount - statement" + ex.getMessage());
-            }
-        }catch(SQLException ex){
-            throw new DBException("SQL-exception in verwijderenAccount - connection" + ex.getMessage());
         }
     }
 

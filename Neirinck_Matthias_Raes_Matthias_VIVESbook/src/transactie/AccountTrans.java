@@ -50,33 +50,11 @@ public class AccountTrans implements InterfaceAccountTrans
         }
 
     }
-    
-    public Account zoekAccountOpLogin(String login) throws DBException, ApplicationException {
-        if (login == null || login.trim().equals("")) {
-            throw new ApplicationException("Login niet ingevuld");
-        }
-
-        AccountDB accDB = new AccountDB();
-        return accDB.zoekAccountOpLogin(login);
-    }
-
-    public Account zoekAccountOpEmail(String email) throws DBException, ApplicationException {
-        if (email == null || email.trim().equals("")) {
-            throw new ApplicationException("Email niet ingevuld");
-        }
-
-        AccountDB accDB = new AccountDB();
-        return accDB.zoekAccountOpEmail(email);
-    }
 
     @Override
-    public void accountWijzigen(Account teWijzigenAccount) throws DBException, ApplicationException
+    public void accountWijzigen(Account teWijzigenAccount) throws ApplicationException
     {
         AccountDB acct = new AccountDB();
-        acct.wijzigenAccount(teWijzigenAccount);
-        
-        /*
-        Dit is niet goed want de gebruiker mag geen DBExceptions zien
         try
         {
             acct.wijzigenAccount(teWijzigenAccount);
@@ -84,7 +62,7 @@ public class AccountTrans implements InterfaceAccountTrans
         catch (DBException e)
         {
             throw new ApplicationException("Database problem " + e.getMessage());
-        }*/
+        }
     }
 
     private boolean checkIfIngevuld(Account account)
@@ -93,24 +71,4 @@ public class AccountTrans implements InterfaceAccountTrans
                 && account.getVoornaam() != null;
     }
 
-    private void checkAlleVeldenIngevuld(Account a) throws ApplicationException{
-        if(a.getNaam() == null || a.getNaam().trim().equals("")){
-            throw new ApplicationException("Naam niet ingevuld");
-        }
-        if(a.getVoornaam() == null || a.getVoornaam().trim().equals("")){
-            throw new ApplicationException("Voornaam niet ingevuld");
-        }
-        if(a.getLogin() == null || a.getLogin().trim().equals("")){
-            throw new ApplicationException("Login niet ingevuld");
-        }
-        if(a.getPaswoord() == null || a.getPaswoord().trim().equals("")){
-            throw new ApplicationException("Paswoord niet ingevuld");
-        }
-        if(a.getEmailadres() == null || a.getEmailadres().trim().equals("")){
-            throw new ApplicationException("Emailadres niet ingevuld");
-        }
-        if(a.getGeslacht() == null){
-            throw new ApplicationException("Geslacht niet ingevuld");
-        }
-    }
 }
