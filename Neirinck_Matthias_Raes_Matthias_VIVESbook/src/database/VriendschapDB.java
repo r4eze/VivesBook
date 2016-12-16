@@ -21,9 +21,10 @@ import java.util.ArrayList;
  *
  * @author Katrien.Deleu
  */
-public class VriendschapDB
+public class VriendschapDB implements InterfaceVriendschapDB
 {
 
+    @Override
     public void toevoegenVriendschap(String account, String vriend) throws DBException
     {
         if (account.equals(vriend))
@@ -72,6 +73,7 @@ public class VriendschapDB
         }
     }
 
+    @Override
     public void verwijderenVriendschap(String account, String vriend) throws DBException
     {
         if (zoekVriendschap(account, vriend) == null)
@@ -111,6 +113,7 @@ public class VriendschapDB
         }
     }
 
+    @Override
     public Vriendschap zoekVriendschap(String account, String vriend) throws DBException
     {
         Vriendschap returnVriendschap = null;
