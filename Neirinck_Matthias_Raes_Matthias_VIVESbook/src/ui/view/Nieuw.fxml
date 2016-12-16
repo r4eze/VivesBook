@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.NieuwAccountController">
+   <children>
+      <Label layoutX="113.0" layoutY="83.0" text="Naam:" />
+      <Label layoutX="330.0" layoutY="83.0" text="Voornaam:" />
+      <Label layoutX="114.0" layoutY="119.0" text="Emailadres:" />
+      <TextField fx:id="naam" layoutX="163.0" layoutY="79.0" />
+      <TextField fx:id="voornaam" layoutX="407.0" layoutY="79.0" />
+      <TextField fx:id="adres" layoutX="163.0" layoutY="115.0" prefHeight="25.0" prefWidth="246.0" />
+      <Label layoutX="100.0" layoutY="151.0" text="Geslacht:" />
+      <ChoiceBox fx:id="geslacht" layoutX="163.0" layoutY="147.0" prefWidth="150.0" />
+      <Label layoutX="114.0" layoutY="183.0" text="Login:" />
+      <TextField fx:id="login" layoutX="163.0" layoutY="179.0" />
+      <Label layoutX="103.0" layoutY="216.0" text="paswoord:" />
+      <Button fx:id="okButton" defaultButton="true" layoutX="407.0" layoutY="270.0" onAction="#btnOkClicked" mnemonicParsing="false" text="Ok" />
+      <Button fx:id="cancelButton" cancelButton="true" layoutX="164.0" layoutY="270.0" onAction="#btnCancelClicked" mnemonicParsing="false" text="Cancel" />
+      <Label fx:id="errorLabel" layoutX="158.0" layoutY="323.0" text="Error" textFill="RED" />
+      <PasswordField fx:id="paswoord" layoutX="164.0" layoutY="212.0" />
+   </children>
+</AnchorPane>
