@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package transactie;
 
 import bags.Post;
@@ -10,56 +5,56 @@ import database.PostDB;
 import exception.ApplicationException;
 import exception.DBException;
 
-/**
- *
- * @author Katrien.Deleu
- */
 public class PostTrans implements InterfacePostTrans
 {
-
     @Override
-    public void postToevoegen(Post post) throws ApplicationException, DBException
+    public void postToevoegen(Post post) throws DBException, ApplicationException
     {
-        PostDB pdb = new PostDB();
+        PostDB postDB = new PostDB();
+        
         if (post != null)
-        {
-            pdb.toevoegenPost(post);
-        }
-        else
         {
             throw new ApplicationException("Er werd geen post opgegeven");
         }
+
+        postDB.toevoegenPost(post);
     }
 
     @Override
-    public void postVerwijderen(Integer postID, String verwijderaar) throws ApplicationException, DBException
+    public void postVerwijderen(Integer postID, String verwijderaar) throws DBException, ApplicationException
     {
-        PostDB pdb = new PostDB();
-        Post post = pdb.zoekPost(postID);
-        if (post != null && post.getEigenaar().equals(verwijderaar))
-        {
-            pdb.verwijderenPost(postID);
-        }
-        else
+        PostDB postDB = new PostDB();
+        Post post = postDB.zoekPost(postID);
+        
+        if (post == null)
         {
             throw new ApplicationException("De opgegeven post bestaat niet");
         }
-
+        if(!post.getEigenaar().equals(verwijderaar))
+        {
+            throw new ApplicationException("U bent geen eigenaar van de post");
+        }
+        
+        postDB.verwijderenPost(postID);
     }
 
-    public void postWijzigen(Post post, Post nieuwPost) throws ApplicationException, DBException
+    public void postWijzigen(Post post, Post nieuwPost) throws DBException, ApplicationException
     {
-        PostDB pdb = new PostDB();
-        Post p = pdb.zoekPost(post.getId());
-        if (p == null)
+        PostDB postDB = new PostDB();
+        
+        if(post == null)
+        {
+            throw new ApplicationException("Er werd geen post meegegeven");
+        }
+        if(nieuwPost == null)
+        {
+            throw new ApplicationException("Er werd geen nieuwe post meegegeven");
+        }
+        if (postDB.zoekPost(post.getId()) == null)
         {
             throw new ApplicationException("De te wijzigen post bestaat niet");
         }
-        else
-        {
-            pdb.wijzigenPost(post, nieuwPost);
-        }
 
+        postDB.wijzigenPost(post, nieuwPost);
     }
-
 }

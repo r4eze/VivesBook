@@ -19,8 +19,6 @@ public class AccountDBTest {
         accountDB = new AccountDB();
     }
     
-    // NOG TEST TOEVOEGEN VOOR NOG EEN ACCOUNT TOE TE VOEGEN MET VERSCHILLEND LOGIN/EMAILADRES ??NOIDIG??? OOK IN TRANS 
-    
     @Rule
     public ExpectedException thrown = ExpectedException.none();
     

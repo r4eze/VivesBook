@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package transactie;
 
 import bags.Account;
@@ -10,49 +5,37 @@ import database.AccountDB;
 import exception.ApplicationException;
 import exception.DBException;
 
-/**
- *
- * @author Katrien.Deleu
- */
 public class AccountTrans implements InterfaceAccountTrans
 {
 
     @Override
     public void accountToevoegen(Account acc) throws ApplicationException, DBException
     {
-        AccountDB acct = new AccountDB();
-        Account ac = null;
-        if (checkIfIngevuld(acc))
+        AccountDB accountDB = new AccountDB();
+        
+        if(acc == null)
         {
-            ac = acct.zoekAccountOpLogin(acc.getLogin());
-            if (ac == null)
-            {
-                ac = acct.zoekAccountOpEmail(acc.getEmailadres());
-                if (ac == null)
-                {
-
-                    acct.toevoegenAccount(acc);
-                }
-                else
-                {
-                    throw new ApplicationException("email bestaat al");
-                }
-            }
-            else
-            {
-                throw new ApplicationException("Login bestaat al");
-            }
-
+            throw new ApplicationException("Er werd geen account ingevuld");
         }
-        else
+        
+        checkAlleVeldenIngevuld(acc);
+        
+        if (accountDB.zoekAccountOpLogin(acc.getLogin()) != null)
+        {       
+            throw new ApplicationException("Er bestaat al een account met dezelfde login");
+        }  
+        
+        if (accountDB.zoekAccountOpEmail(acc.getEmailadres()) != null)
         {
-            throw new ApplicationException("Gelieve alle velden in te vullen");
+            throw new ApplicationException("Er bestaat al een account met hetzelfde emailadres");
         }
-
+        
+        accountDB.toevoegenAccount(acc);
     }
     
     public Account zoekAccountOpLogin(String login) throws DBException, ApplicationException {
-        if (login == null || login.trim().equals("")) {
+        if(login == null || login.trim().equals(""))
+        {
             throw new ApplicationException("Login niet ingevuld");
         }
 
@@ -61,7 +44,8 @@ public class AccountTrans implements InterfaceAccountTrans
     }
 
     public Account zoekAccountOpEmail(String email) throws DBException, ApplicationException {
-        if (email == null || email.trim().equals("")) {
+        if(email == null || email.trim().equals(""))
+        {
             throw new ApplicationException("Email niet ingevuld");
         }
 
@@ -72,44 +56,48 @@ public class AccountTrans implements InterfaceAccountTrans
     @Override
     public void accountWijzigen(Account teWijzigenAccount) throws DBException, ApplicationException
     {
-        AccountDB acct = new AccountDB();
-        acct.wijzigenAccount(teWijzigenAccount);
-        
-        /*
-        Dit is niet goed want de gebruiker mag geen DBExceptions zien
-        try
+        if(teWijzigenAccount == null)
         {
-            acct.wijzigenAccount(teWijzigenAccount);
+            throw new ApplicationException("Er werd geen account ingevuld");
         }
-        catch (DBException e)
+        
+        AccountDB accountDB = new AccountDB();
+        
+        checkAlleVeldenIngevuld(teWijzigenAccount);
+        
+        Account accViaEmail = accountDB.zoekAccountOpEmail(teWijzigenAccount.getEmailadres());
+        
+        // Exception als het account met hetzelfde emailadres verschillend is van het account dat moet gewijzigd worden
+        if(accViaEmail != null && !accViaEmail.getLogin().equals(teWijzigenAccount.getLogin()))
         {
-            throw new ApplicationException("Database problem " + e.getMessage());
-        }*/
+            throw new ApplicationException("Er bestaat al een account met hetzelfde emailadres");
+        }
+        
+        accountDB.wijzigenAccount(teWijzigenAccount);
     }
 
-    private boolean checkIfIngevuld(Account account)
-    {
-        return account.getEmailadres() != null && account.getGeslacht() != null && account.getLogin() != null && account.getNaam() != null
-                && account.getVoornaam() != null;
-    }
-
-    private void checkAlleVeldenIngevuld(Account a) throws ApplicationException{
-        if(a.getNaam() == null || a.getNaam().trim().equals("")){
+    private void checkAlleVeldenIngevuld(Account acc) throws ApplicationException{
+        if(acc.getNaam() == null || acc.getNaam().trim().equals(""))
+        {
             throw new ApplicationException("Naam niet ingevuld");
         }
-        if(a.getVoornaam() == null || a.getVoornaam().trim().equals("")){
+        if(acc.getVoornaam() == null || acc.getVoornaam().trim().equals(""))
+        {
             throw new ApplicationException("Voornaam niet ingevuld");
         }
-        if(a.getLogin() == null || a.getLogin().trim().equals("")){
+        if(acc.getLogin() == null || acc.getLogin().trim().equals(""))
+        {
             throw new ApplicationException("Login niet ingevuld");
         }
-        if(a.getPaswoord() == null || a.getPaswoord().trim().equals("")){
+        if(acc.getPaswoord() == null || acc.getPaswoord().trim().equals(""))
+        {
             throw new ApplicationException("Paswoord niet ingevuld");
         }
-        if(a.getEmailadres() == null || a.getEmailadres().trim().equals("")){
+        if(acc.getEmailadres() == null || acc.getEmailadres().trim().equals(""))
+        {
             throw new ApplicationException("Emailadres niet ingevuld");
         }
-        if(a.getGeslacht() == null){
+        if(acc.getGeslacht() == null){
             throw new ApplicationException("Geslacht niet ingevuld");
         }
     }

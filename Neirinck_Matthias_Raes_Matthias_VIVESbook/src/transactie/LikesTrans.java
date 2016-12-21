@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package transactie;
 
 import bags.Likes;
@@ -10,61 +5,51 @@ import database.LikesDB;
 import exception.ApplicationException;
 import exception.DBException;
 
-/**
- *
- * @author Katrien.Deleu
- */
 public class LikesTrans implements InterfaceLikesTrans
 {
 
     @Override
-    public void LikesToevoegen(Likes like) throws ApplicationException, DBException
+    public void LikesToevoegen(Likes like) throws DBException, ApplicationException
     {
-        LikesDB ldb = new LikesDB();
-        CheckIfLikeComplete(like);
-        Likes lik = ldb.zoekLike(like.getAccountlogin(), like.getPostid());
-        if (lik != null)
+        LikesDB likeDB = new LikesDB();
+        checkIfLikeComplete(like);
+
+        if(likeDB.zoekLike(like.getAccountlogin(), like.getPostid()) != null)
         {
-            throw new ApplicationException("Like bestaat al");
+            throw new ApplicationException("De post werd al geliket");
         }
-        ldb.toevoegenLike(like);
+        
+        likeDB.toevoegenLike(like);
     }
 
     @Override
-    public void likeVerwijderen(String account, Integer postID) throws ApplicationException
+    public void likeVerwijderen(String account, Integer postID) throws DBException, ApplicationException
     {
-        LikesDB ldb = new LikesDB();
-        try
-        {
-            ldb.verwijderenLike(account, postID);
-        }
-        catch (DBException e)
-        {
-            throw new ApplicationException(e.getMessage());
-        }
+        LikesDB likeDB = new LikesDB();
+        likeDB.verwijderenLike(account, postID);
     }
 
     @Override
-    public void likeWijzigen(Likes like) throws ApplicationException
+    public void likeWijzigen(Likes like) throws DBException, ApplicationException
     {
-        LikesDB ldb = new LikesDB();
-        try
-        {
-            ldb.wijzigenLike(like);
-        }
-        catch (DBException e)
-        {
-            throw new ApplicationException(e.getMessage());
-        }
+        LikesDB likeDB = new LikesDB();
+        checkIfLikeComplete(like);
+        likeDB.wijzigenLike(like);
     }
 
-    private void CheckIfLikeComplete(Likes like) throws ApplicationException
+    private void checkIfLikeComplete(Likes like) throws ApplicationException
     {
-        if (like.getAccountlogin() == null || like.getPostid() == null || like.getType() == null)
+        if(like.getAccountlogin() == null)
         {
-            throw new ApplicationException("De like werd niet ingevuld");
+            throw new ApplicationException("De werd geen login meegegeven");
         }
-
+        if(like.getPostid() == null)
+        {
+            throw new ApplicationException("Er werd geen post ID meegegeven");
+        }
+        if(like.getType() == null)
+        {
+            throw new ApplicationException("Er werd geen type meegegeven");
+        }
     }
-
 }

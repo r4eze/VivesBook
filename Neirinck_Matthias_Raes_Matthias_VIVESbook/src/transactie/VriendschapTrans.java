@@ -1,47 +1,69 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package transactie;
 
 import database.VriendschapDB;
 import exception.ApplicationException;
 import exception.DBException;
 
-/**
- *
- * @author Katrien.Deleu
- */
 public class VriendschapTrans implements InterfaceVriendschapTrans
 {
 
     @Override
-    public void VriendschapToevoegen(String account, String vriend) throws ApplicationException
+    public void VriendschapToevoegen(String account, String vriend) throws DBException, ApplicationException
     {
-        VriendschapDB vrdb = new VriendschapDB();
-        try
+        VriendschapDB vriendDB = new VriendschapDB();
+        AccountTrans accTrans = new AccountTrans();
+        
+        if(account == null)
         {
-            vrdb.toevoegenVriendschap(account, vriend);
+            throw new ApplicationException("Er werd geen account meegegeven");
         }
-        catch (DBException e)
+        if(vriend == null)
         {
-            throw new ApplicationException("Database probleem:" + e.getMessage());
+            throw new ApplicationException("Er werd geen vriend meegegven");
         }
+        if(vriendDB.zoekVriendschap(account, vriend) != null && vriendDB.zoekVriendschap(vriend, account) != null)
+        {
+            throw new ApplicationException("Reeds bevriend");
+        }
+        if(accTrans.zoekAccountOpLogin(vriend) == null)
+        {
+            throw new ApplicationException("Vriend bestaat niet");
+        }
+        if(accTrans.zoekAccountOpLogin(account) == null)
+        {
+            throw new ApplicationException("Account bestaat niet");
+        }
+        
+        vriendDB.toevoegenVriendschap(account, vriend);
     }
 
     @Override
-    public void vriendschapVerwijderen(String account, String vriend) throws ApplicationException
+    public void vriendschapVerwijderen(String account, String vriend) throws DBException, ApplicationException
     {
-        VriendschapDB vrdb = new VriendschapDB();
-        try
+        VriendschapDB vriendDB = new VriendschapDB();
+        AccountTrans accTrans = new AccountTrans();
+        
+        if(account == null)
         {
-            vrdb.verwijderenVriendschap(account, vriend);
+            throw new ApplicationException("Er werd geen account meegegeven");
         }
-        catch (DBException e)
+        if(vriend == null){
+            throw new ApplicationException("Er werd geen vriend meegegven");
+        }
+        if(accTrans.zoekAccountOpLogin(vriend) == null)
         {
-            throw new ApplicationException("Database probleem: " + e.getMessage());
+            throw new ApplicationException("Vriend bestaat niet");
         }
+        if(accTrans.zoekAccountOpLogin(account) == null)
+        {
+            throw new ApplicationException("Account bestaat niet");
+        }
+        if(vriendDB.zoekVriendschap(account, vriend) == null && vriendDB.zoekVriendschap(vriend, account) == null)
+        {
+            throw new ApplicationException("De vriendschap bestaat niet");
+        }
+        
+        vriendDB.verwijderenVriendschap(account, vriend);
     }
 
 }
