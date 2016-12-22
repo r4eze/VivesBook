@@ -48,5 +48,5 @@ public class VriendschapTransTest {
         }
     }
 
-        
+        // jezelfd toevoegen als vriend
 }

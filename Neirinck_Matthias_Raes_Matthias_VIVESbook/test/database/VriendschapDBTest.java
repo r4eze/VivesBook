@@ -77,6 +77,8 @@ public class VriendschapDBTest {
             assertEquals("wachtwoord12345", ophaalVriend.getPaswoord());
             assertEquals("peter@hotmail.com", ophaalVriend.getEmailadres());
             assertEquals(Geslacht.M, ophaalVriend.getGeslacht());
+            
+            vriendDB.verwijderenVriendschap(account.getLogin(), vriend.getLogin());
         }catch(DBException ex){
             System.out.println("testToevoegenVriendschap - " + ex);
         }

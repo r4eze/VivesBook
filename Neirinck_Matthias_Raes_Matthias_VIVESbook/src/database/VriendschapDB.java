@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package database;
 
 import bags.Account;
@@ -17,99 +12,68 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-/**
- *
- * @author Katrien.Deleu
- */
+
 public class VriendschapDB implements InterfaceVriendschapDB
 {
 
     @Override
     public void toevoegenVriendschap(String account, String vriend) throws DBException
     {
-        if (account.equals(vriend))
+        try(Connection conn = ConnectionManager.getConnection();)
         {
-            throw new DBException("Je kan jezelf niet toevoegen als vriend!");
-        }
-        if (zoekVriendschap(account, vriend) == null)
-        {
-            // connectie tot stand brengen (en automatisch sluiten)
-            try (Connection conn = ConnectionManager.getConnection();)
+            try(PreparedStatement stat = conn.prepareStatement(
+                "INSERT INTO vriendschap(accountlogin, accountvriendlogin) VALUES(?,?)",
+                Statement.RETURN_GENERATED_KEYS);)
             {
-                // preparedStatement opstellen (en automtisch sluiten)
-                try (PreparedStatement stmt = conn.
-                        prepareStatement(
-                                "INSERT INTO vriendschap(accountlogin, accountvriendlogin) VALUES(?,?)",
-                                Statement.RETURN_GENERATED_KEYS);)
-                {
 
-                    stmt.setString(1, account);
-                    stmt.setString(2, vriend);
+                  stat.setString(1, account);
+                  stat.setString(2, vriend);
+                  
+                  stat.execute();
+                  
+                  stat.setString(1, vriend);
+                  stat.setString(2, account);
+                  
+                  stat.execute();
 
-                    // execute voert elke sql-statement uit, executeQuery enkel de select
-                    stmt.execute();
-                    PreparedStatement stmet = conn.prepareStatement("insert into vriendschap(accountlogin, accountvriendlogin) values(?,?)");
-                    stmet.setString(1, vriend);
-                    stmet.setString(2, account);
-                    stmet.execute();
-
-                }
-                catch (SQLException sqlEx)
-                {
-                    //System.out.println(sqlEx.getMessage()); => debugging purpose
-                    throw new DBException("Vriend bestaat niet");
-
-                }
-            }
-            catch (SQLException sqlEx)
+            }catch (SQLException ex)
             {
-                throw new DBException(
-                        "SQL-exception in toevoegenFriend - connection" + sqlEx);
+                throw new DBException("SQL-exception in toevoegenVriendschap - statement - " + ex);
             }
         }
-        else
+        catch (SQLException ex)
         {
-            throw new DBException("Deze persoon staat al tussen jouw vrienden");
+            throw new DBException(
+              "SQL-exception in toevoegenVriendschap - connection - " + ex);
         }
     }
 
     @Override
     public void verwijderenVriendschap(String account, String vriend) throws DBException
     {
-        if (zoekVriendschap(account, vriend) == null)
+        try (Connection conn = ConnectionManager.getConnection();)
         {
-            throw new DBException("Vriendschap bestaat niet");
+            try (PreparedStatement stat = conn.prepareStatement(
+              "DELETE FROM vriendschap WHERE accountlogin = ? AND accountvriendlogin = ?");) {
+
+                stat.setString(1, account);
+                stat.setString(2, vriend);
+                
+                stat.execute();
+                
+                stat.setString(1, vriend);
+                stat.setString(2, account);
+                
+                stat.execute();
+            }
+            catch (SQLException ex)
+            {
+                throw new DBException("SQL-exception in verwijderenVriendschap - statement - " + ex);
+            }
         }
-        else
+        catch (SQLException ex)
         {
-            // connectie tot stand brengen (en automatisch sluiten)
-            try (Connection conn = ConnectionManager.getConnection();)
-            {
-                // preparedStatement opstellen (en automtisch sluiten)
-                try (PreparedStatement stmt = conn.prepareStatement(
-                        "delete from vriendschap where accountlogin = ? and accountvriendlogin = ?");)
-                {
-
-                    stmt.setString(1, account);
-                    stmt.setString(2, vriend);
-                    // execute voert elke sql-statement uit, executeQuery enkel de select
-                    stmt.execute();
-
-                    PreparedStatement stmet = conn.prepareStatement("delete from vriendschap where accountlogin = ? and accountvriendlogin = ?");
-                    stmet.setString(1, vriend);
-                    stmet.setString(2, account);
-                    stmet.execute();
-                }
-                catch (SQLException sqlEx)
-                {
-                    throw new DBException("SQL-exception in verwijderenFriend - statement" + sqlEx);
-                }
-            }
-            catch (SQLException sqlEx)
-            {
-                throw new DBException(
-                        "SQL-exception in verwijderenFriend - connection" + sqlEx);
-            }
+            throw new DBException("SQL-exception in verwijderenVriendschap - connection - " + ex);
         }
     }
 
@@ -117,24 +81,21 @@ public class VriendschapDB implements InterfaceVriendschapDB
     public Vriendschap zoekVriendschap(String account, String vriend) throws DBException
     {
         Vriendschap returnVriendschap = null;
-        // connectie tot stand brengen (en automatisch sluiten)
+
         try (Connection conn = ConnectionManager.getConnection();)
         {
-            // preparedStatement opstellen (en automtisch sluiten)
-            try (PreparedStatement stmt = conn.prepareStatement(
-                    "select accountlogin, accountvriendlogin from vriendschap where accountlogin = ? and accountvriendlogin = ?");)
+            try (PreparedStatement stat = conn.prepareStatement(
+                    "SELECT accountlogin, accountvriendlogin FROM vriendschap WHERE accountlogin = ? AND accountvriendlogin = ?");)
             {
-                stmt.setString(1, account);
-                stmt.setString(2, vriend);
-                // execute voert het SQL-statement uit
-                stmt.execute();
-                // result opvragen (en automatisch sluiten)
-                try (ResultSet r = stmt.getResultSet())
+                stat.setString(1, account);
+                stat.setString(2, vriend);
+
+                stat.execute();
+                
+                try (ResultSet r = stat.getResultSet())
                 {
-                    // van de post uit de database een Post-object maken
                     Vriendschap vriendschap = new Vriendschap();
 
-                    // er werd een vriendschap gevonden
                     if (r.next())
                     {
                         vriendschap.setAccountlogin(r.getString("accountlogin"));
@@ -145,20 +106,19 @@ public class VriendschapDB implements InterfaceVriendschapDB
 
                     return returnVriendschap;
                 }
-                catch (SQLException sqlEx)
+                catch (SQLException ex)
                 {
-                    throw new DBException("SQL-exception in zoekFriend - resultset" + sqlEx);
+                    throw new DBException("SQL-exception in zoekVriendschap - resultset - " + ex);
                 }
             }
-            catch (SQLException sqlEx)
+            catch (SQLException ex)
             {
-                throw new DBException("SQL-exception in zoekFriend - statement" + sqlEx);
+                throw new DBException("SQL-exception in zoekVriendschap - statement - " + ex);
             }
         }
-        catch (SQLException sqlEx)
+        catch (SQLException ex)
         {
-            throw new DBException(
-                    "SQL-exception in zoekFriend - connection");
+            throw new DBException("SQL-exception in zoekVriendschap - connection - " + ex);
         }
     }
 
@@ -167,17 +127,14 @@ public class VriendschapDB implements InterfaceVriendschapDB
         ArrayList<Account> vrienden = new ArrayList<>();
         try (Connection conn = ConnectionManager.getConnection();)
         {
-            // preparedStatement opstellen (en automtisch sluiten)
             try (PreparedStatement stmt = conn.prepareStatement(
                     "select * from account where login in (select accountvriendlogin from vriendschap where accountlogin = ?) order by voornaam, naam");)
             {
                 stmt.setString(1, login);
-                // execute voert het SQL-statement uit
                 stmt.execute();
-                // result opvragen (en automatisch sluiten)
+
                 try (ResultSet r = stmt.getResultSet())
                 {
-                    // van de post uit de database een Post-object maken
                     while (r.next())
                     {
                         Account vriend = new Account();
@@ -188,23 +145,21 @@ public class VriendschapDB implements InterfaceVriendschapDB
                         vriend.setVoornaam(r.getString("voornaam"));
                         vrienden.add(vriend);
                     }
-
-                    // er werd een vriendschap gevonden
                 }
-                catch (SQLException sqlEx)
+                catch (SQLException ex)
                 {
-                    throw new DBException("SQL-exception in zoekFriend - resultset" + sqlEx);
+                    throw new DBException("SQL-exception in zoekVrienden - resultset - " + ex);
                 }
             }
-            catch (SQLException sqlEx)
+            catch (SQLException ex)
             {
-                throw new DBException("SQL-exception in zoekFriend - statement" + sqlEx);
+                throw new DBException("SQL-exception in zoekVrienden - statement - " + ex);
             }
         }
-        catch (SQLException sqlEx)
+        catch (SQLException ex)
         {
             throw new DBException(
-                    "SQL-exception in zoekFriend - connection");
+                    "SQL-exception in zoekVrienden - connection - " + ex);
         }
         return vrienden;
     }

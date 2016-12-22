@@ -158,6 +158,10 @@ public class VriendController implements Initializable
             errorLabel.setVisible(true);
             errorLabel.setText(e.getMessage());
         }
+        catch(DBException ex)
+        {
+            
+        }
     }
 
     @FXML
@@ -174,6 +178,10 @@ public class VriendController implements Initializable
         {
             errorLabel.setVisible(true);
             errorLabel.setText(e.getMessage());
+        }
+        catch(DBException ex)
+        {
+            
         }
     }
 

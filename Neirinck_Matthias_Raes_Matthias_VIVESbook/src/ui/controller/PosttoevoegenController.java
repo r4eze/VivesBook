@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ui.controller;
 
 import bags.Account;
@@ -212,7 +207,7 @@ public class PosttoevoegenController implements Initializable
         {
             if (post.getEigenaar().equals(account.getLogin()))
             {
-                try
+                /*try
                 {
                     tr.postWijzigen(post, pos);
                     mainApp.laadPostsScherm();
@@ -227,7 +222,7 @@ public class PosttoevoegenController implements Initializable
                     errorLabel.setText("Contacteer uw beheerder");
                     errorLabel.setVisible(true);
                 }
-
+            */
             }
             else
             {
@@ -286,7 +281,7 @@ public class PosttoevoegenController implements Initializable
             }
             else
             {
-                LikesTrans tr = new LikesTrans();
+                /*LikesTrans tr = new LikesTrans();
                 try
                 {
                     tr.likeWijzigen(like);
@@ -296,7 +291,7 @@ public class PosttoevoegenController implements Initializable
                 {
                     errorLabel.setText(e.getMessage());
                     errorLabel.setVisible(true);
-                }
+                }*/
             }
         }
     }
@@ -357,6 +352,10 @@ public class PosttoevoegenController implements Initializable
             {
                 errorLabel.setVisible(true);
                 errorLabel.setText(e.getMessage());
+            }
+            catch(DBException ex)
+            {
+                
             }
         }
         else

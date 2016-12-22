@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package database;
 
 import bags.Likes;
@@ -24,23 +19,21 @@ public class LikesDB implements InterfaceLikesDB
     {
         try (Connection conn = ConnectionManager.getConnection();)
         {
-            try
+            try(PreparedStatement stat = conn.prepareStatement("INSERT INTO likes values(?,?,?)"))
             {
-                PreparedStatement stat = conn.prepareStatement("insert into likes values(?,?,?)");
                 stat.setString(1, like.getAccountlogin());
-                System.out.println(like.getAccountlogin());
                 stat.setInt(2, like.getPostid());
                 stat.setString(3, like.getType().toString());
                 stat.execute();
             }
-            catch (SQLException e)
+            catch (SQLException ex)
             {
-                throw new DBException(e.getMessage());
+                throw new DBException("SQL-exception in toevoegenLike - statement - " + ex);
             }
         }
-        catch (SQLException e)
+        catch (SQLException ex)
         {
-            throw new DBException("database probleem - bij connectie");
+            throw new DBException("SQL-exception in toevoegenLike - connection - " + ex);
         }
     }
 
@@ -49,22 +42,21 @@ public class LikesDB implements InterfaceLikesDB
     {
         try (Connection conn = ConnectionManager.getConnection();)
         {
-            try
+            try(PreparedStatement stat = conn.prepareStatement("UPDATE likes SET type=? WHERE accountlogin=? AND postid=?"))
             {
-                PreparedStatement stat = conn.prepareStatement("update likes set type=? where accountlogin=? and postid=?");
-                stat.setString(1, teWijzigenLike.getType().toString());
+                stat.setString(1, teWijzigenLike.getType().name());
                 stat.setString(2, teWijzigenLike.getAccountlogin());
                 stat.setInt(3, teWijzigenLike.getPostid());
                 stat.execute();
             }
-            catch (SQLException e)
+            catch (SQLException ex)
             {
-                throw new DBException("database probleem - bij prepare");
+                throw new DBException("SQL-exception in wijzigenLike - statement - " + ex);
             }
         }
-        catch (SQLException e)
+        catch (SQLException ex)
         {
-            throw new DBException("Database probleem - bij connectie");
+            throw new DBException("SQL-exception in wijzigenLike - connection - " + ex);
         }
     }
 
@@ -75,76 +67,84 @@ public class LikesDB implements InterfaceLikesDB
         {
             try
             {
-                PreparedStatement stat = conn.prepareStatement("delete from likes where accountlogin=? and postid=?");
+                PreparedStatement stat = conn.prepareStatement("DELETE FROM likes WHERE accountlogin=? AND postid=?");
                 stat.setString(1, login);
-                stat.setInt(2, postid);
+
+                if(postid == null){
+                    stat.setNull(2, java.sql.Types.NULL);
+                }else{
+                    stat.setInt(2, postid);
+                }
                 stat.execute();
             }
-            catch (SQLException e)
+            catch (SQLException ex)
             {
-                throw new DBException("Database probleem - bij prepare" + e.getMessage());
+                throw new DBException("SQL-exception in verwijderenLike - statement" + ex);
             }
         }
-        catch (SQLException e)
+        catch (SQLException ex)
         {
-            throw new DBException("database probleem - bij connectie");
+            throw new DBException("SQL-exception in verwijderenLike - connection - " + ex);
         }
     }
 
     @Override
     public Likes zoekLike(String login, int postid) throws DBException
     {
-        Likes like = null;
+        Likes returnLike = null;
         try (Connection conn = ConnectionManager.getConnection();)
         {
             try
             {
-                PreparedStatement stat = conn.prepareStatement("select * from likes where postid = ? and accountlogin = ?");
+                PreparedStatement stat = conn.prepareStatement("SELECT * FROM likes WHERE postid = ? AND accountlogin = ?");
+                
                 stat.setInt(1, postid);
                 stat.setString(2, login);
                 stat.execute();
-                try
+                
+                try(ResultSet r = stat.getResultSet())
                 {
-                    ResultSet r = stat.getResultSet();
+                    Likes like = new Likes();
+                    
                     if (r.next())
                     {
                         like.setAccountlogin(r.getString("accountlogin"));
                         like.setPostid(r.getInt("postid"));
                         like.setType(LikeType.valueOf(r.getString("type")));
+                        returnLike = like;
                     }
+                    
+                    return returnLike;
                 }
-                catch (SQLException e)
+                catch (SQLException ex)
                 {
-                    throw new DBException("Database probleem bij resultset");
+                    throw new DBException("SQL-exception in zoekLike - resultset - " + ex);
                 }
             }
-            catch (SQLException e)
+            catch (SQLException ex)
             {
-                System.out.println(e.getMessage());
-                throw new DBException("Database probleem bij prepare");
-
+                throw new DBException("SQL-exception in zoekLike - statement - " + ex);
             }
         }
-        catch (SQLException e)
+        catch (SQLException ex)
         {
-            throw new DBException("database probleem bij connectie");
+            throw new DBException("SQL-exception in zoekLike - connection - " + ex);
         }
-        return like;
     }
 
     @Override
     public ArrayList<Likes> zoekAlleLikesVanPost(int postID) throws DBException
     {
         ArrayList likeList = new ArrayList<>();
+        
         try (Connection conn = ConnectionManager.getConnection();)
         {
-            try
+            try(PreparedStatement stat = conn.prepareStatement("SELECT * FROM likes WHERE postid=?"))
             {
-                PreparedStatement stat = conn.prepareStatement("select * from likes where postid=?");
                 stat.setInt(1, postID);
                 stat.execute();
-                ResultSet r = stat.getResultSet();
-                try
+
+                try(ResultSet r = stat.getResultSet())
                 {
                     while (r.next())
                     {
@@ -155,19 +155,19 @@ public class LikesDB implements InterfaceLikesDB
                         likeList.add(like);
                     }
                 }
-                catch (SQLException e)
+                catch (SQLException ex)
                 {
-                    throw new DBException("database probleem - bij resultset" + e.getMessage());
+                    throw new DBException("SQL-exception in zoekAlleLikesVanPost - resultset - " + ex);
                 }
             }
-            catch (SQLException e)
+            catch (SQLException ex)
             {
-                throw new DBException("database probleem - bij prepare" + e.getMessage());
+                throw new DBException("SQL-exception in zoekAlleLikesVanPost - statement - " + ex);
             }
         }
-        catch (SQLException e)
+        catch (SQLException ex)
         {
-            throw new DBException("database probleem - bij connectie " + e.getMessage());
+            throw new DBException("SQL-exception in zoekAlleLikesVanPost - connection - " + ex);
         }
 
         return likeList;

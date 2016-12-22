@@ -37,24 +37,4 @@ public class PostTrans implements InterfacePostTrans
         
         postDB.verwijderenPost(postID);
     }
-
-    public void postWijzigen(Post post, Post nieuwPost) throws DBException, ApplicationException
-    {
-        PostDB postDB = new PostDB();
-        
-        if(post == null)
-        {
-            throw new ApplicationException("Er werd geen post meegegeven");
-        }
-        if(nieuwPost == null)
-        {
-            throw new ApplicationException("Er werd geen nieuwe post meegegeven");
-        }
-        if (postDB.zoekPost(post.getId()) == null)
-        {
-            throw new ApplicationException("De te wijzigen post bestaat niet");
-        }
-
-        postDB.wijzigenPost(post, nieuwPost);
-    }
 }

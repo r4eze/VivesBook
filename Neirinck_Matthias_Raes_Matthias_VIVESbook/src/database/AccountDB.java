@@ -19,81 +19,93 @@ public class AccountDB implements InterfaceAccountDB
     @Override
     public Account zoekAccountOpLogin(String login) throws DBException
     {
-        Account returnacc = null;
+        Account returnAcc = null;
 
         try (Connection conn = ConnectionManager.getConnection();)
         {
-            try (PreparedStatement stat = conn.prepareStatement("select * from Account where login = ?");)
+            try (PreparedStatement stat = conn.prepareStatement("SELECT * FROM Account WHERE login = ?");)
             {
                 stat.setString(1, login);
                 stat.execute();
+                
                 try (ResultSet r = stat.getResultSet())
                 {
                     Account acc = new Account();
-                    acc.setLogin(login);
+
                     if (r.next())
                     {
                         acc.setNaam(r.getString("naam"));
                         acc.setVoornaam(r.getString("voornaam"));
+                        acc.setLogin(r.getString("login"));
                         acc.setPaswoord(r.getString("paswoord"));
-                        acc.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
                         acc.setEmailadres(r.getString("emailadres"));
-                        returnacc = acc;
+                        acc.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
+                        returnAcc = acc;
                     }
-
+                    
+                    return returnAcc;
                 }
                 catch (SQLException ex)
                 {
                     System.out.println(ex.getMessage());
-                    throw new DBException("SQLException in ZoekAccount - bij resultset \n" + ex.getMessage());
+                    throw new DBException("SQL-exception in ZoekAccountOpLogin - resultset - " + ex);
 
                 }
             }
             catch (SQLException ex)
             {
-                throw new DBException("SQL-exception in zoekAccount - bij prepare statement \n" + ex.getMessage());
+                throw new DBException("SQL-exception in zoekAccountOpLogin - statement - " + ex);
             }
         }
         catch (SQLException ex)
         {
-            throw new DBException("SQL-exception in zoekAccount - bij connectie \n" + ex.getMessage());
+            throw new DBException("SQL-exception in zoekAccountOpLogin - connection - " + ex);
 
         }
-        return returnacc;
     }
 
     @Override
     public Account zoekAccountOpEmail(String email) throws DBException
     {
-        Account acc = null;
+        Account returnAcc = null;
         try (Connection conn = ConnectionManager.getConnection();)
         {
             try
             {
-                PreparedStatement stat = conn.prepareStatement("select * from account where emailadres=?");
+                PreparedStatement stat = conn.prepareStatement("SELECT * FROM account WHERE emailadres=?");
+                
                 stat.setString(1, email);
                 stat.execute();
-                ResultSet r = stat.getResultSet();
-                if (r.next())
+                
+                try(ResultSet r = stat.getResultSet()){
+                    Account a = new Account();
+                    
+                    if(r.next()){
+                        a.setNaam(r.getString("naam"));
+                        a.setVoornaam(r.getString("voornaam"));
+                        a.setLogin(r.getString("login"));
+                        a.setPaswoord(r.getString("paswoord"));
+                        a.setEmailadres(r.getString("emailadres"));
+                        a.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
+                        returnAcc = a;
+                    }
+                    
+                    return returnAcc;
+                }
+                catch(SQLException ex)
                 {
-                    acc.setEmailadres(r.getString("emailadres"));
-                    acc.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
-                    acc.setLogin(r.getString("login"));
-                    acc.setPaswoord(r.getString("paswoord"));
-                    acc.setNaam(r.getString("naam"));
-                    acc.setVoornaam(r.getString("voornaam"));
+                    throw new DBException("SQL-exception in zoekAccountOpEmail - resultset - " + ex);
                 }
             }
             catch (SQLException ex)
             {
-                throw new DBException("SQLException in zoekaccount bij prepare  \n" + ex.getMessage());
+                throw new DBException("SQL-exception in zoekAccountOpEmail - statement - " + ex);
             }
         }
         catch (SQLException ex)
         {
-            throw new DBException("SQL-exception in zoekaccount - bij connectie  \n" + ex.getMessage());
+            throw new DBException("SQL-exception in zoekAccountOpEmail - connection - " + ex);
         }
-        return acc;
     }
 
     @Override
@@ -101,7 +113,7 @@ public class AccountDB implements InterfaceAccountDB
     {
         try (Connection conn = ConnectionManager.getConnection();)
         {
-            try (PreparedStatement stat = conn.prepareStatement("insert into account values(?,?,?,?,?,?)");)
+            try (PreparedStatement stat = conn.prepareStatement("INSERT INTO account values(?,?,?,?,?,?)");)
             {
                 stat.setString(1, account.getNaam());
                 stat.setString(2, account.getVoornaam());
@@ -119,123 +131,72 @@ public class AccountDB implements InterfaceAccountDB
             }
             catch (SQLException ex)
             {
-                throw new DBException("SQL-exception in AccountToevoegen - at prepare \n" + ex.getMessage());
+                throw new DBException("SQL-exception in toevoegenAccount - statement - " + ex);
             }
         }
         catch (SQLException ex)
         {
-            throw new DBException("SQL-exception in Toevoegen Account  - at connectie \n" + ex.getMessage());
+            throw new DBException("SQL-exception in toevoegenAccount - at connection - " + ex);
         }
     }
 
     @Override
-    public void wijzigenAccount(Account acc) throws DBException
+    public void wijzigenAccount(Account teWijzigenAccount) throws DBException
     {
         try (Connection conn = ConnectionManager.getConnection();)
         {
-            try
+            try (PreparedStatement stat = conn.prepareStatement("UPDATE account SET naam = ?, "
+                    + "voornaam = ?, "
+                    + "paswoord = ?, "
+                    + "emailadres = ?, "
+                    + "geslacht = ? WHERE login = ?");)
             {
-                // NIET NODIG OM EMAIL VALID TE CHECKEN
-                PreparedStatement stat = conn.prepareStatement("Select * from account where emailadres = ?");
-                stat.setString(1, acc.getEmailadres());
+                stat.setString(1, teWijzigenAccount.getNaam());
+                stat.setString(2, teWijzigenAccount.getVoornaam());
+                stat.setString(3, teWijzigenAccount.getPaswoord());
+                stat.setString(4, teWijzigenAccount.getEmailadres());
+                
+                if(teWijzigenAccount.getGeslacht() == null){
+                    stat.setNull(5, java.sql.Types.NULL);
+                }else{
+                    stat.setString(5, teWijzigenAccount.getGeslacht().name());
+                }
+                
+                stat.setString(6, teWijzigenAccount.getLogin());
+                
                 stat.execute();
-                ResultSet r = stat.getResultSet();
-                System.out.println(checkIfEmailValid(acc, r));
-                r.beforeFirst();
-                if (this.checkIfEmailValid(acc, r))
-                {
-                    stat = conn.prepareStatement("UPDATE account SET naam=?,voornaam=?,emailadres=?,geslacht=?,paswoord=? where login=?");
-                    stat.setString(1, acc.getNaam());
-                    stat.setString(2, acc.getVoornaam());
-                    stat.setString(3, acc.getEmailadres());
-                    
-                    if (acc.getGeslacht() == null) {
-                        stat.setNull(5, java.sql.Types.NULL);
-                    } else {
-                        stat.setString(5, acc.getGeslacht().name());
-                    }
-                    
-                    stat.setString(5, acc.getPaswoord());
-                    stat.setString(6, acc.getLogin());
-                    stat.execute();
-                }
-                else
-                {
-                    throw new DBException("Emailadres bestaat al");
-                }
             }
             catch (SQLException ex)
             {
-                throw new DBException("SQL-exception in Toevoegen Account - at prepare statement \n" + ex.getMessage());
+                throw new DBException("SQL-exception in wijzigenAccount - statement - " + ex);
             }
         }
         catch (SQLException ex)
         {
-            throw new DBException("SQL-exception in Toevoegen Account  - at connectie \n" + ex.getMessage());
+            throw new DBException("SQL-exception in wijzigenAccount - connection - " + ex);
 
         }
     }
     
-    public void verwijderenAccount(Account teVerwijderenAccount) throws DBException{
-        try(Connection conn = ConnectionManager.getConnection();){
+    public void verwijderenAccount(Account teVerwijderenAccount) throws DBException
+    {
+        try(Connection conn = ConnectionManager.getConnection();)
+        {
             try(PreparedStatement stmt = conn.prepareStatement(
-                    "DELETE FROM account WHERE login = ?");){
-                
+                    "DELETE FROM account WHERE login = ?");)
+            {  
                 stmt.setString(1, teVerwijderenAccount.getLogin());
                 stmt.execute();
                 
-            }catch(SQLException ex){
-                throw new DBException("SQL-Exception in verwijderenAccount - statement" + ex.getMessage());
             }
-        }catch(SQLException ex){
-            throw new DBException("SQL-exception in verwijderenAccount - connection" + ex.getMessage());
-        }
-    }
-
-    private boolean checkIfEmailValid(Account account, ResultSet r) throws DBException
-    {
-        ArrayList<String> emails = new ArrayList<>();
-        try
-        {
-            while (r.next())
+            catch(SQLException ex)
             {
-                if (r.getString("login").equals(account.getLogin()))
-                {
-
-                }
-                else
-                {
-                    emails.add(r.getString("emailadres"));
-                    //System.out.println(r.getString("emailadres")); debugging purpose
-                }
+                throw new DBException("SQL-Exception in verwijderenAccount - statement - " + ex);
             }
         }
-        catch (SQLException e)
+        catch(SQLException ex)
         {
-            throw new DBException("Problem with resultset");
+            throw new DBException("SQL-exception in verwijderenAccount - connection - " + ex);
         }
-        return emails.isEmpty();
     }
-
-    private boolean checkIfLoginValid(String login, ResultSet r) throws DBException
-    {
-        ArrayList<String> logins = new ArrayList<>();
-
-        try
-        {
-            r.beforeFirst();
-            while (r.next())
-            {
-                logins.add(r.getString("login"));
-                System.out.println(r.getString("login"));
-            }
-        }
-        catch (SQLException e)
-        {
-            throw new DBException("Problem with resultset");
-        }
-        System.out.println(logins);
-        return !logins.contains(login);
-    }
-
 }
