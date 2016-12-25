@@ -1,205 +1,160 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ui.controller;
 
 import bags.Account;
-import database.VriendschapDB;
 import exception.ApplicationException;
 import exception.DBException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import static javafx.collections.FXCollections.observableArrayList;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import transactie.AccountTrans;
 import transactie.VriendschapTrans;
 import ui.VIVESbook;
 
-/**
- * FXML Controller class
- *
- * @author raesm
- */
 public class VriendController implements Initializable
 {
-
-    private Account account;
-
     private VIVESbook mainApp;
+    
+    private Account loggedInAccount;
 
     @FXML
-    private TextField vriendZoek;
+    private TextField tfZoekVriend;
 
     @FXML
-    private ListView vriendView;
+    private ListView lvVriend;
 
     @FXML
-    private TextField vriendNaam;
+    private TextField tfVriendNaam;
 
     @FXML
-    private Label errorLabel;
+    private Label laErrorMessage;
+    
+    private ObservableList<Account> obsVrienden;
 
-    private ArrayList<Account> vrienden;
-
-    private int index;
-
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        errorLabel.setVisible(false);
-        vriendZoek.textProperty().addListener(new ChangeListener<String>()
+        laErrorMessage.setVisible(false);
+        obsVrienden = FXCollections.observableArrayList();
+        
+        tfZoekVriend.textProperty().addListener(new ChangeListener<String>()
         {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
             {
-                try
-                {
-                    changeListView(newValue);
-                    index = -1;
-                    vriendView.getSelectionModel().clearSelection();
-                }
-                catch (ApplicationException ex)
-                {
-                    errorLabel.setVisible(true);
-                    errorLabel.setText(ex.getMessage());
-                    System.out.println(ex.getMessage());
-                }
+                changeListView(oldValue, newValue);
             }
 
         });
-        index = -1;
     }
-
-    public void changeListView(String value) throws ApplicationException
-    {
-        VriendschapDB vrdb = new VriendschapDB();
-        try
-        {
-            vrienden = vrdb.zoekVrienden(account.getLogin(), value);
-            ObservableList view = FXCollections.observableArrayList();
-            for (Account v : vrienden)
-            {
-                view.add(v.getVoornaam() + " " + v.getNaam() + " | " + v.getLogin());
-            }
-            vriendView.setItems(view);
-        }
-        catch (DBException e)
-        {
-            throw new ApplicationException("Database problem:" + e.getMessage());
-        }
-
-    }
-
-    public void initializeListview() throws IOException
-    {
-        VriendschapDB vrdb = new VriendschapDB();
-        try
-        {
-            vrienden = vrdb.zoekVrienden(account.getLogin());
-            ObservableList view = FXCollections.observableArrayList();
-            for (Account v : vrienden)
-            {
-                view.add(v.getVoornaam() + " " + v.getNaam() + " | " + v.getLogin());
-            }
-            vriendView.setItems(view);
-        }
-        catch (DBException e)
-        {
-            throw new IOException("Database problem:" + e.getMessage());
-        }
-
-    }
-
-    public Account getAccount()
-    {
-        return account;
-    }
-
-    public void setAccount(Account account)
-    {
-        this.account = account;
-    }
-
+    
     public void setMainApp(VIVESbook mainApp)
     {
         this.mainApp = mainApp;
     }
-
-    @FXML
-    private void btnToevoeg(ActionEvent event) throws ApplicationException
+    
+    public void setData(Account account)
     {
-        VriendschapTrans tr = new VriendschapTrans();
+        this.loggedInAccount = account;
+        initializeListview();
+    }
+    
+    public void initializeListview()
+    {
+        VriendschapTrans vriendTrans = new VriendschapTrans();
         try
         {
-            tr.VriendschapToevoegen(account.getLogin(), vriendNaam.getText());
-            changeListView(vriendZoek.getText());
+            ArrayList<Account> vrienden = vriendTrans.zoekVrienden(loggedInAccount.getLogin());
+            
+            for (Account a : vrienden)
+            {
+                obsVrienden.add(a);
+                lvVriend.getItems().add(a);
+            }
+        }
+        catch (DBException e)
+        {
+            System.out.println("Contacteer uw beheerder");
+        }
+        catch(ApplicationException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void changeListView(String oldValue, String newValue)
+    {
+        if(oldValue != null && (newValue.length() < oldValue.length()))
+        {
+            lvVriend.setItems(obsVrienden);
+        }
+
+        ObservableList<Account> filteredList = FXCollections.observableArrayList();
+        for(Object entry : lvVriend.getItems())
+        {
+            Account a = (Account) entry;
+            if(a.getNaam().toLowerCase().contains(newValue.toLowerCase()) || a.getVoornaam().toLowerCase().contains(newValue.toLowerCase()))
+            {
+                filteredList.add(a);
+            }
+        }
+        
+        lvVriend.setItems(filteredList);
+    }   
+    
+    @FXML
+    private void buVriendToevoegenClicked(ActionEvent event)
+    {
+        laErrorMessage.setText(null);
+        
+        VriendschapTrans vriendTrans = new VriendschapTrans();
+        try
+        {
+            vriendTrans.VriendschapToevoegen(loggedInAccount.getLogin(), tfVriendNaam.getText());
+            lvVriend.getItems().add(new AccountTrans().zoekAccountOpLogin(tfVriendNaam.getText()));
         }
         catch (ApplicationException e)
         {
-            errorLabel.setVisible(true);
-            errorLabel.setText(e.getMessage());
+            laErrorMessage.setText(e.getMessage());
         }
         catch(DBException ex)
         {
-            
+            laErrorMessage.setText("Contacteer uw beheerder");
         }
     }
 
     @FXML
-    private void btnVerwijder(ActionEvent event)
+    private void buVerwijderVriendClicked(ActionEvent event)
     {
-        resetError();
-        VriendschapTrans tr = new VriendschapTrans();
+        laErrorMessage.setText(null);
+        VriendschapTrans vriendTrans = new VriendschapTrans();
         try
         {
-            tr.vriendschapVerwijderen(account.getLogin(), vrienden.get(index).getLogin());
-            changeListView(vriendZoek.getText());
+            vriendTrans.vriendschapVerwijderen(loggedInAccount.getLogin(), ((Account) lvVriend.getItems().get(lvVriend.getSelectionModel().getSelectedIndex())).getLogin());
+            lvVriend.getItems().remove(lvVriend.getSelectionModel().getSelectedIndex());
+        }
+        catch(DBException e)
+        {
+            laErrorMessage.setText("Contacteer uw beheerder");
         }
         catch (ApplicationException e)
         {
-            errorLabel.setVisible(true);
-            errorLabel.setText(e.getMessage());
-        }
-        catch(DBException ex)
-        {
-            
+            laErrorMessage.setText(e.getMessage());
         }
     }
 
-    private void resetError()
-    {
-        errorLabel.setVisible(false);
-    }
-
     @FXML
-    private void btnCancel(ActionEvent event)
+    private void buCancelClicked(ActionEvent event)
     {
-        mainApp.laadPostsScherm();
-    }
-
-    @FXML
-    public void viewClicked(MouseEvent event)
-    {
-        index = vriendView.getSelectionModel().getSelectedIndex();
-        //System.out.println(vriendView.getItems()); => debugging purpose
+        mainApp.laadHomeScherm(loggedInAccount);
     }
 }

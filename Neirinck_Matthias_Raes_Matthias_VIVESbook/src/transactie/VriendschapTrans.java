@@ -1,8 +1,10 @@
 package transactie;
 
+import bags.Account;
 import database.VriendschapDB;
 import exception.ApplicationException;
 import exception.DBException;
+import java.util.ArrayList;
 
 public class VriendschapTrans implements InterfaceVriendschapTrans
 {
@@ -20,6 +22,10 @@ public class VriendschapTrans implements InterfaceVriendschapTrans
         if(vriend == null)
         {
             throw new ApplicationException("Er werd geen vriend meegegven");
+        }
+        if(account.equals(vriend))
+        {
+            throw new ApplicationException("Je kan niet bevriend zijn met jezelf");
         }
         if(vriendDB.zoekVriendschap(account, vriend) != null && vriendDB.zoekVriendschap(vriend, account) != null)
         {
@@ -66,4 +72,15 @@ public class VriendschapTrans implements InterfaceVriendschapTrans
         vriendDB.verwijderenVriendschap(account, vriend);
     }
 
+    public ArrayList<Account> zoekVrienden(String login) throws DBException, ApplicationException
+    {
+        VriendschapDB vriendDB = new VriendschapDB();
+        return vriendDB.zoekVrienden(login);
+    }
+    
+    /*public ArrayList<Account> zoekVrienden(String login, String zoek) throws DBException, ApplicationException
+    {
+        VriendschapDB vriendDB = new VriendschapDB();
+        return vriendDB.zoekVrienden(login, zoek);
+    }*/
 }

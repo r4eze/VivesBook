@@ -72,8 +72,12 @@ public class Account {
         this.paswoord = paswoord;
     }
     
-    @Override
+    /*@Override
     public String toString() {
         return "Account{" + "voornaam=" + voornaam + ", naam=" + naam + ", emailadres=" + emailadres + ", geslacht=" + geslacht + ", login=" + login + ", paswoord=" + paswoord + '}';
+    }*/
+    
+    public String toString() {
+        return voornaam + " " + naam + " | " + login;
     }
 }
