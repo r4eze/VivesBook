@@ -113,7 +113,7 @@ public class AccountTransTest {
 
     // Negatieve test: null object als account toe te voegen
     @Test
-    public void testNullAccountToevoegen() throws ApplicationException {
+    public void testAccountToevoegenNull() throws ApplicationException {
         thrown.expect(ApplicationException.class);
         
         try{
@@ -125,7 +125,7 @@ public class AccountTransTest {
 
     // Negatieve test: null object als account proberen te wijzigen
     @Test
-    public void testNullAccountWijzigen() throws ApplicationException {
+    public void testAccountWijzigenNull() throws ApplicationException {
         thrown.expect(ApplicationException.class);
         
         try{

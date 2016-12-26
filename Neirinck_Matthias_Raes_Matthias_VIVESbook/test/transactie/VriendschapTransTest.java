@@ -6,6 +6,8 @@ import datatype.Geslacht;
 import exception.DBException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import transactie.VriendschapTrans;
 
 public class VriendschapTransTest {
@@ -13,6 +15,9 @@ public class VriendschapTransTest {
     private Account account, vriend;
     private VriendschapTrans vriendTrans;
     private AccountDB accountDB;
+    
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     
     public VriendschapTransTest() {
         vriendTrans = new VriendschapTrans();
