@@ -5,7 +5,7 @@
  */
 package transactie;
 
-import bags.Likes;
+import bags.Like;
 import exception.ApplicationException;
 import exception.DBException;
 
@@ -15,10 +15,10 @@ import exception.DBException;
  */
 public interface InterfaceLikesTrans {
 
-    public void LikesToevoegen(Likes like) throws DBException, ApplicationException;
+    public void LikesToevoegen(Like like) throws DBException, ApplicationException;
 
     public void likeVerwijderen(String account, Integer postID) throws DBException, ApplicationException;
 
-    public void likeWijzigen(Likes like) throws DBException, ApplicationException;
+    public void likeWijzigen(Like like) throws DBException, ApplicationException;
 
 }

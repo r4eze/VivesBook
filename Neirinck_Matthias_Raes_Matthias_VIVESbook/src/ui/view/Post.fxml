@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="563.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.PostController">
+<AnchorPane id="AnchorPane" prefHeight="413.0" prefWidth="446.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="account" layoutX="59.0" layoutY="57.0" prefHeight="17.0" prefWidth="284.0" text="Label" />
-      <ListView fx:id="postView" layoutX="52.0" layoutY="137.0" onMouseClicked="#postClick" prefHeight="200.0" prefWidth="310.0" />
-      <Button layoutX="405.0" layoutY="53.0" mnemonicParsing="false" onAction="#btnAccountWijzigen" text="Account Wijzigen" />
-      <Button layoutX="405.0" layoutY="175.0" mnemonicParsing="false" onAction="#btnPostToevoegen" prefHeight="25.0" prefWidth="109.0" text="Post Toevoegen" />
-      <Button layoutX="405.0" layoutY="212.0" mnemonicParsing="false" onAction="#btnPostOverzicht" prefHeight="25.0" prefWidth="109.0" text="Post Overzicht" />
-      <Button layoutX="405.0" layoutY="95.0" mnemonicParsing="false" onAction="#btnVriendToevoegen" prefHeight="25.0" prefWidth="109.0" text="Vrienden" />
-      <Button layoutX="33.0" layoutY="350.0" mnemonicParsing="false" onAction="#btnLogout" text="Logout" />
-      <Label fx:id="errorLabel" layoutX="126.0" layoutY="354.0" text="error" textFill="RED" />
-
+      <TextArea fx:id="taPostInhoud" layoutX="38.0" layoutY="36.0" prefHeight="99.0" prefWidth="200.0" />
+      <Button fx:id="buOk" layoutX="184.0" layoutY="326.0" mnemonicParsing="false" onAction="#buOkClicked" text="Ok" />
+      <Button fx:id="buCancel" layoutX="40.0" layoutY="326.0" mnemonicParsing="false" onAction="#buCancelClicked" text="Cancel" />
+      <Label fx:id="laErrorMessage" layoutX="38.0" layoutY="292.0" prefHeight="25.0" prefWidth="397.0" text="Error" textFill="RED" />
+      <Label layoutX="38.0" layoutY="14.0" text="Tekst" />
+      <Label fx:id="laLikeLabel" layoutX="40.0" layoutY="144.0" prefHeight="17.0" prefWidth="42.0" text="Likes" />
+      <ListView fx:id="lvLikeView" layoutX="37.0" layoutY="168.0" prefHeight="120.0" prefWidth="157.0" />
+      <ComboBox fx:id="cbLikeType" layoutX="216.0" layoutY="168.0" prefHeight="25.0" prefWidth="125.0" />
+      <Button fx:id="buLikeToevoegen" layoutX="216.0" layoutY="203.0" mnemonicParsing="false" onAction="#buLikeToevoegenClicked" prefHeight="25.0" prefWidth="125.0" text="Like toevoegen" textOverrun="CLIP" />
+      <Button fx:id="buLikeWijzigen" layoutX="216.0" layoutY="234.0" mnemonicParsing="false" onAction="#buLikeWijzigenClicked" prefHeight="25.0" prefWidth="125.0" text="Like Wijzigen" />
+      <Button fx:id="buLikeVerwijderen" layoutX="216.0" layoutY="267.0" mnemonicParsing="false" onAction="#buLikeVerwijderenClicked" prefHeight="25.0" prefWidth="125.0" text="Like Verwijderen" />
+      <Button fx:id="buPostVerwijderen" layoutX="251.0" layoutY="73.0" mnemonicParsing="false" onAction="#buPostVerwijderenClicked" prefHeight="25.0" prefWidth="131.0" text="Post Verwijderen" />
    </children>
+   <cursor>
+      <Cursor fx:constant="DEFAULT" />
+   </cursor>
 </AnchorPane>

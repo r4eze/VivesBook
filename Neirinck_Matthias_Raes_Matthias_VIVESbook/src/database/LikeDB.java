@@ -1,6 +1,6 @@
 package database;
 
-import bags.Likes;
+import bags.Like;
 import database.connect.ConnectionManager;
 import datatype.LikeType;
 import exception.ApplicationException;
@@ -11,11 +11,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class LikesDB implements InterfaceLikesDB
+public class LikeDB implements InterfaceLikesDB
 {
 
     @Override
-    public void toevoegenLike(Likes like) throws DBException
+    public void toevoegenLike(Like like) throws DBException
     {
         try (Connection conn = ConnectionManager.getConnection();)
         {
@@ -38,7 +38,7 @@ public class LikesDB implements InterfaceLikesDB
     }
 
     @Override
-    public void wijzigenLike(Likes teWijzigenLike) throws DBException
+    public void wijzigenLike(Like teWijzigenLike) throws DBException
     {
         try (Connection conn = ConnectionManager.getConnection();)
         {
@@ -89,9 +89,9 @@ public class LikesDB implements InterfaceLikesDB
     }
 
     @Override
-    public Likes zoekLike(String login, int postid) throws DBException
+    public Like zoekLike(String login, int postid) throws DBException
     {
-        Likes returnLike = null;
+        Like returnLike = null;
         try (Connection conn = ConnectionManager.getConnection();)
         {
             try
@@ -104,7 +104,7 @@ public class LikesDB implements InterfaceLikesDB
                 
                 try(ResultSet r = stat.getResultSet())
                 {
-                    Likes like = new Likes();
+                    Like like = new Like();
                     
                     if (r.next())
                     {
@@ -133,7 +133,7 @@ public class LikesDB implements InterfaceLikesDB
     }
 
     @Override
-    public ArrayList<Likes> zoekAlleLikesVanPost(int postID) throws DBException
+    public ArrayList<Like> zoekAlleLikesVanPost(int postID) throws DBException
     {
         ArrayList likeList = new ArrayList<>();
         
@@ -148,7 +148,7 @@ public class LikesDB implements InterfaceLikesDB
                 {
                     while (r.next())
                     {
-                        Likes like = new Likes();
+                        Like like = new Like();
                         like.setAccountlogin(r.getString("accountlogin"));
                         like.setPostid(postID);
                         like.setType(LikeType.valueOf(r.getString("type")));

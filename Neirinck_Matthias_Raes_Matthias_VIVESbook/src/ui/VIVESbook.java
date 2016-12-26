@@ -1,24 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ui;
 
 import bags.Account;
 import bags.Post;
 import java.io.IOException;
-import java.util.HashSet;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ui.controller.LoginController;
-import ui.controller.NieuwAccountController;
-import ui.controller.PostController;
-import ui.controller.PosttoevoegenController;
+import ui.controller.AccountToevoegenController;
+import ui.controller.HomeController;
+import ui.controller.PostToevoegenController;
 import ui.controller.VriendController;
+import ui.controller.AccountWijzigenController;
+import ui.controller.PostOverzichtController;
 
 /**
  *
@@ -26,17 +22,11 @@ import ui.controller.VriendController;
  */
 public class VIVESbook extends Application
 {
-
     private Stage stage;
-
-    private Account loggedInAccount = null;
-
-    private Post viewingPost = null;
 
     @Override
     public void start(Stage primaryStage)
     {
-
         stage = primaryStage;
         laadLoginScherm();
         primaryStage.show();
@@ -44,111 +34,115 @@ public class VIVESbook extends Application
 
     public void laadLoginScherm()
     {
-
         try
         {
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource(
                     "view/Login.fxml"));
             Parent root = loader.load();
-            LoginController controller = (LoginController) loader.
-                    getController();
+            LoginController controller = (LoginController) loader.getController();
 
             // referentie naar hier bewaren in de controller
             controller.setMainApp(this);
 
             Scene scene = new Scene(root);
-            stage.setTitle("VIVESbook");
+            stage.setTitle("VIVESbook - Login");
             stage.setScene(scene);
-
         }
         catch (Exception e)
         {
             System.out.println("!!! - " + e.getMessage());
 
         }
-
     }
-
-    public void laadPosttoevoegenScherm()
+    
+    public void laadHomeScherm(Account loggedInAccount)
     {
         try
         {
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource(
-                    "view/Posttoevoegen.fxml"));
-
-            // controller instellen
+                    "view/Home.fxml"));
+            
+            // controller ophalen
             Parent root = loader.load();
-            PosttoevoegenController controller = (PosttoevoegenController) loader.getController();
+            HomeController controller = (HomeController) loader.getController();
 
             // referentie naar hier bewaren in de controller
             controller.setMainApp(this);
-            controller.setAccount(loggedInAccount);
-            controller.setPost(viewingPost);
-            controller.initialize(null, null);
+            controller.setData(loggedInAccount);
 
             Scene scene = new Scene(root);
-            stage.setTitle("Post toevoegen");
+            stage.setTitle("VIVESbook - Home");
             stage.setScene(scene);
-
         }
         catch (IOException e)
         {
             System.out.println("!!! - " + e.getMessage());
         }
-
     }
 
-    public void laadPostsScherm()
+    public void laadPostToevoegenScherm(Account loggedInAccount)
     {
         try
         {
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource(
                     "view/Post.fxml"));
-
-            // controller ophalen
+            
+            PostToevoegenController controller = new PostToevoegenController();
+            loader.setController(controller);
             Parent root = loader.load();
-            PostController controller = (PostController) loader.getController();
-
-            //account dat is ingelogd bijhouden.
-            controller.setAccount(loggedInAccount);
-            controller.initializeListView(loggedInAccount);
-            controller.setAccountText(loggedInAccount.getVoornaam() + " " + loggedInAccount.getNaam());
-
-            // referentie naar hier bewaren in de controller
+            
             controller.setMainApp(this);
+            controller.setData(loggedInAccount);
 
             Scene scene = new Scene(root);
-            stage.setTitle("VIVESbook - overzicht posts");
+            stage.setTitle("VIVESbook - Post toevoegen");
             stage.setScene(scene);
-
         }
-
         catch (IOException e)
         {
             System.out.println("!!! - " + e.getMessage());
         }
-
     }
-
-    public void laadNieuwScherm()
+    
+    public void laadPostOverzichtScherm(Account loggedInAccount, Post selectedPost)
     {
         try
         {
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource(
-                    "view/Nieuw.fxml"));
-
-            // controller ophalen
+                    "view/Post.fxml"));
+            
+            PostOverzichtController controller = new PostOverzichtController();
+            
+            // moet voor het laden van de controller gebeuren zodat de waarden al ingesteld zijn bij de initizalize()
+            controller.setData(loggedInAccount, selectedPost);
+            
+            loader.setController(controller);
             Parent root = loader.load();
-            NieuwAccountController controller = (NieuwAccountController) loader.getController();
 
-            // referentie naar hier bewaren in de controller
             controller.setMainApp(this);
-            if (loggedInAccount != null)
-            {
-                controller.setAccount(loggedInAccount);
-                controller.setValues(loggedInAccount);
 
-            }
+            Scene scene = new Scene(root);
+            stage.setTitle("VIVESbook - Post toevoegen");
+            stage.setScene(scene);
+        }
+        catch (IOException e)
+        {
+            System.out.println("!!! - " + e.getMessage());
+        }
+    }
+
+    public void laadAccountToevoegenScherm()
+    {
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(this.getClass().getResource(
+                    "view/Account.fxml"));
+
+            AccountToevoegenController controller = new AccountToevoegenController();
+            loader.setController(controller);
+            Parent root = loader.load();
+            
+            controller.setMainApp(this);
 
             Scene scene = new Scene(root);
             stage.setTitle("VIVESbook - Nieuw Account aanmaken");
@@ -160,8 +154,33 @@ public class VIVESbook extends Application
             System.out.println("!!! - " + e.getMessage());
         }
     }
+    
+    public void laadAccountWijzigenScherm(Account loggedInAccount)
+    {
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(this.getClass().getResource(
+                    "view/Account.fxml"));
+            
+            AccountWijzigenController controller = new AccountWijzigenController();
+            loader.setController(controller);
+            Parent root = loader.load();
 
-    public void laadVriendScherm()
+            controller.setMainApp(this);
+            controller.setData(loggedInAccount);
+
+            Scene scene = new Scene(root);
+            stage.setTitle("VIVESbook - Account wijzigen");
+            stage.setScene(scene);
+
+        }
+        catch (IOException e)
+        {
+            System.out.println("!!! - " + e.getMessage());
+        }
+    }
+
+    public void laadVriendScherm(Account loggedInAccount)
     {
         try
         {
@@ -174,8 +193,7 @@ public class VIVESbook extends Application
 
             // referentie naar hier bewaren in de controller
             controller.setMainApp(this);
-            controller.setAccount(loggedInAccount);
-            controller.initializeListview();
+            controller.setData(loggedInAccount);
 
             Scene scene = new Scene(root);
             stage.setTitle("VIVESbook - Lijst van Vrienden");
@@ -192,20 +210,4 @@ public class VIVESbook extends Application
     {
         launch(args);
     }
-
-    public void setAccount(Account acc)
-    {
-        this.loggedInAccount = acc;
-    }
-
-    public Account getAccount()
-    {
-        return loggedInAccount;
-    }
-
-    public void setPost(Post post)
-    {
-        this.viewingPost = post;
-    }
-
 }

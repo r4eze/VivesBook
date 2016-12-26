@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="563.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.HomeController">
+   <children>
+      <Label fx:id="laAccount" layoutX="59.0" layoutY="57.0" prefHeight="17.0" prefWidth="284.0" text="Label" />
+      <ListView fx:id="lvPostView" layoutX="52.0" layoutY="137.0" prefHeight="200.0" prefWidth="310.0" />
+      <Button fx:id="buAccountWijzigen" layoutX="405.0" layoutY="53.0" mnemonicParsing="false" onAction="#buAccountWijzigenClicked" text="Account Wijzigen" />
+      <Button fx:id="buPostToevoegen" layoutX="405.0" layoutY="175.0" mnemonicParsing="false" onAction="#buPostToevoegenClicked" prefHeight="25.0" prefWidth="109.0" text="Post Toevoegen" />
+      <Button fx:id="buPostOverzicht" layoutX="405.0" layoutY="212.0" mnemonicParsing="false" onAction="#buPostOverzichtClicked" prefHeight="25.0" prefWidth="109.0" text="Post Overzicht" />
+      <Button fx:id="buVriendToevoegen" layoutX="405.0" layoutY="95.0" mnemonicParsing="false" onAction="#buVriendToevoegenClicked" prefHeight="25.0" prefWidth="109.0" text="Vrienden" />
+      <Button fx:id="buLogout" layoutX="33.0" layoutY="350.0" mnemonicParsing="false" onAction="#buLogoutClicked" text="Logout" />
+      <Label fx:id="laErrorMessage" layoutX="126.0" layoutY="354.0" text="error" textFill="RED" />
+   </children>
+</AnchorPane>

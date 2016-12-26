@@ -8,8 +8,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="243.0" prefWidth="441.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.LoginController">
    <children>
-      <Button fx:id="okKnop" layoutX="188.0" layoutY="189.0" mnemonicParsing="false" onAction="#btnLoginClicked" text="OK" />
-      <Button fx:id="nieuwKnop" layoutX="66.0" layoutY="189.0" mnemonicParsing="false" onAction="#btnNieuwClicked" text="Nieuw" />
+      <Button fx:id="buLogin" layoutX="188.0" layoutY="189.0" mnemonicParsing="false" onAction="#buLoginClicked" text="OK" />
+      <Button fx:id="buNieuw" layoutX="66.0" layoutY="189.0" mnemonicParsing="false" onAction="#buNieuwClicked" text="Nieuw" />
       <Label layoutX="52.0" layoutY="77.0" text="login" />
       <Label layoutX="25.0" layoutY="119.0" text="paswoord" />
       <TextField fx:id="login" layoutX="113.0" layoutY="73.0" />

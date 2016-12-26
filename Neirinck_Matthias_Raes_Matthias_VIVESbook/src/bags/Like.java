@@ -13,12 +13,12 @@ import datatype.LikeType;
  *
  * @author Katrien.Deleu
  */
-public class Likes {
+public class Like {
     private String accountlogin;
     private Integer postid;
     private LikeType type;
 
-    public Likes() {
+    public Like() {
     }
 
     public String getAccountlogin() {
@@ -45,11 +45,13 @@ public class Likes {
         this.type = type;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         return "Likes{" + "accountlogin=" + accountlogin + ", postid=" + postid + ", type=" + type + '}';
+    }*/
+    
+    @Override
+    public String toString(){
+        return getType().toString() + " - " + getAccountlogin();
     }
-    
-    
-    
 }

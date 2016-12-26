@@ -1,15 +1,14 @@
-package database;
+package transactie;
 
-import bags.Likes;
-import java.util.ArrayList;
+import bags.Like;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class LikesDBTest {
+public class LikeTransTest {
     
-    public LikesDBTest() {
+    public LikeTransTest() {
     }
     
     @Before

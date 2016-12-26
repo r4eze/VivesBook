@@ -2,7 +2,7 @@ package transactie;
 
 import bags.Account;
 import bags.Post;
-import bags.Likes;
+import bags.Like;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +17,8 @@ public class LikesTransTest {
     Post post;
     PostTrans postTrans;
     
-    LikesTrans likeTrans;
-    Likes like;
+    LikeTrans likeTrans;
+    Like like;
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -26,7 +26,7 @@ public class LikesTransTest {
     public LikesTransTest() {
         accountTrans = new AccountTrans();
         postTrans = new PostTrans();
-        likeTrans = new LikesTrans();
+        likeTrans = new LikeTrans();
     }
     
     @Before

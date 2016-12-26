@@ -4,6 +4,7 @@ import bags.Post;
 import database.PostDB;
 import exception.ApplicationException;
 import exception.DBException;
+import java.util.ArrayList;
 
 public class PostTrans implements InterfacePostTrans
 {
@@ -12,12 +13,24 @@ public class PostTrans implements InterfacePostTrans
     {
         PostDB postDB = new PostDB();
         
-        if (post != null)
+        if (post == null)
         {
             throw new ApplicationException("Er werd geen post opgegeven");
         }
 
         postDB.toevoegenPost(post);
+    }
+    
+    public Integer postToevoegenReturnId(Post post) throws DBException, ApplicationException
+    {
+        PostDB postDB = new PostDB();
+        
+        if (post == null)
+        {
+            throw new ApplicationException("Er werd geen post opgegeven");
+        }
+
+        return postDB.toevoegenPost(post);
     }
 
     @Override
@@ -36,5 +49,11 @@ public class PostTrans implements InterfacePostTrans
         }
         
         postDB.verwijderenPost(postID);
+    }
+    
+    public ArrayList<Post> zoekAllePostsVanAccountEnVrienden(String login) throws DBException, ApplicationException
+    {
+        PostDB postDb = new PostDB();
+        return postDb.zoekAllePostsVanAccountEnVrienden(login);
     }
 }

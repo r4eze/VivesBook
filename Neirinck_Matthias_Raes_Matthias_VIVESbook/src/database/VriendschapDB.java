@@ -164,7 +164,7 @@ public class VriendschapDB implements InterfaceVriendschapDB
         return vrienden;
     }
 
-    public ArrayList<Account> zoekVrienden(String login, String zoek) throws DBException
+    /*public ArrayList<Account> zoekVrienden(String login, String zoek) throws DBException
     {
         ArrayList<Account> vrienden = new ArrayList<>();
         if (zoek == null || zoek.equals(""))
@@ -202,22 +202,22 @@ public class VriendschapDB implements InterfaceVriendschapDB
 
                         // er werd een vriendschap gevonden
                     }
-                    catch (SQLException sqlEx)
+                    catch (SQLException ex)
                     {
-                        throw new DBException("SQL-exception in zoekFriend - resultset" + sqlEx);
+                        throw new DBException("SQL-exception in zoekFriend - resultset - " + ex);
                     }
                 }
-                catch (SQLException sqlEx)
+                catch (SQLException ex)
                 {
-                    throw new DBException("SQL-exception in zoekFriend - statement" + sqlEx);
+                    throw new DBException("SQL-exception in zoekFriend - statement - " + ex);
                 }
             }
-            catch (SQLException sqlEx)
+            catch (SQLException ex)
             {
                 throw new DBException(
-                        "SQL-exception in zoekFriend - connection");
+                        "SQL-exception in zoekVrienden - connection - " + ex);
             }
         }
         return vrienden;
-    }
+    }*/
 }

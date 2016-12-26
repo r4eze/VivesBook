@@ -1,17 +1,17 @@
 package transactie;
 
-import bags.Likes;
-import database.LikesDB;
+import bags.Like;
+import database.LikeDB;
 import exception.ApplicationException;
 import exception.DBException;
+import java.util.ArrayList;
 
-public class LikesTrans implements InterfaceLikesTrans
+public class LikeTrans implements InterfaceLikesTrans
 {
-
     @Override
-    public void LikesToevoegen(Likes like) throws DBException, ApplicationException
+    public void LikesToevoegen(Like like) throws DBException, ApplicationException
     {
-        LikesDB likeDB = new LikesDB();
+        LikeDB likeDB = new LikeDB();
         checkIfLikeComplete(like);
 
         if(likeDB.zoekLike(like.getAccountlogin(), like.getPostid()) != null)
@@ -25,19 +25,25 @@ public class LikesTrans implements InterfaceLikesTrans
     @Override
     public void likeVerwijderen(String account, Integer postID) throws DBException, ApplicationException
     {
-        LikesDB likeDB = new LikesDB();
+        LikeDB likeDB = new LikeDB();
         likeDB.verwijderenLike(account, postID);
     }
 
     @Override
-    public void likeWijzigen(Likes like) throws DBException, ApplicationException
+    public void likeWijzigen(Like like) throws DBException, ApplicationException
     {
-        LikesDB likeDB = new LikesDB();
+        LikeDB likeDB = new LikeDB();
         checkIfLikeComplete(like);
         likeDB.wijzigenLike(like);
     }
+    
+    public ArrayList<Like> zoekAlleLikesVanPost(int postID) throws DBException, ApplicationException
+    {
+        LikeDB likeDB = new LikeDB();
+        return likeDB.zoekAlleLikesVanPost(postID);
+    }
 
-    private void checkIfLikeComplete(Likes like) throws ApplicationException
+    private void checkIfLikeComplete(Like like) throws ApplicationException
     {
         if(like.getAccountlogin() == null)
         {

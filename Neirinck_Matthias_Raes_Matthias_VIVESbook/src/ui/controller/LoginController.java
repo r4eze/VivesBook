@@ -56,10 +56,14 @@ public class LoginController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
         errorLabel.setVisible(false);
         ingelogd = false;
 
+    }
+    
+    public void setMainApp(VIVESbook mainApp)
+    {
+        this.mainApp = mainApp;
     }
 
     private String processPassword(char[] pass)
@@ -94,8 +98,7 @@ public class LoginController implements Initializable
         {
             if (acc.getPaswoord().equals(passwoord))
             {
-                mainApp.setAccount(acc);
-                mainApp.laadPostsScherm();
+                mainApp.laadHomeScherm(acc);
                 ingelogd = true;
             }
             else
@@ -107,7 +110,7 @@ public class LoginController implements Initializable
     }
 
     @FXML
-    private void btnLoginClicked(ActionEvent event)
+    private void buLoginClicked(ActionEvent event)
     {
 
         try
@@ -122,9 +125,9 @@ public class LoginController implements Initializable
     }
 
     @FXML
-    private void btnNieuwClicked(ActionEvent event)
+    private void buNieuwClicked(ActionEvent event)
     {
-        mainApp.laadNieuwScherm();
+        mainApp.laadAccountToevoegenScherm();
     }
 
     /**
@@ -133,14 +136,10 @@ public class LoginController implements Initializable
      * @param mainApp referentie naar de runnable class die alle oproepen naar
      *                de schermen bestuurt
      */
-    public void setMainApp(VIVESbook mainApp)
-    {
-        this.mainApp = mainApp;
-    }
+    
 
     private void resetError()
     {
         errorLabel.setVisible(false);
     }
-
 }
