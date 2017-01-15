@@ -1,6 +1,7 @@
 package transactie;
 
 import bags.Account;
+import bags.Vriendschap;
 import database.VriendschapDB;
 import exception.ApplicationException;
 import exception.DBException;
@@ -70,6 +71,12 @@ public class VriendschapTrans implements InterfaceVriendschapTrans
         }
         
         vriendDB.verwijderenVriendschap(account, vriend);
+    }
+    
+    public Vriendschap zoekVriendschap(String account, String vriend) throws DBException, ApplicationException
+    {
+        VriendschapDB vriendDB = new VriendschapDB();
+        return vriendDB.zoekVriendschap(account, vriend);
     }
 
     public ArrayList<Account> zoekVrienden(String login) throws DBException, ApplicationException

@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="105.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="498.0" minWidth="10.0" prefWidth="495.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
    <children>
-      <Label layoutX="113.0" layoutY="83.0" text="Naam:" />
-      <Label layoutX="330.0" layoutY="83.0" text="Voornaam:" />
-      <Label layoutX="101.0" layoutY="119.0" text="Emailadres:" />
-      <TextField fx:id="tfNaam" layoutX="163.0" layoutY="79.0" />
-      <TextField fx:id="tfVoornaam" layoutX="407.0" layoutY="79.0" />
-      <TextField fx:id="tfEmail" layoutX="163.0" layoutY="115.0" prefHeight="25.0" prefWidth="246.0" />
-      <Label layoutX="100.0" layoutY="151.0" text="Geslacht:" />
-      <ComboBox fx:id="cbGeslacht" layoutX="163.0" layoutY="147.0" prefWidth="150.0" />
-      <Label layoutX="114.0" layoutY="183.0" text="Login:" />
-      <TextField fx:id="tfLogin" layoutX="163.0" layoutY="179.0" />
-      <Label layoutX="103.0" layoutY="216.0" text="paswoord:" />
-      <Button fx:id="buOk" defaultButton="true" layoutX="407.0" layoutY="270.0" mnemonicParsing="false" onAction="#buOkClicked" text="Toevoegen" />
-      <Button fx:id="buCancel" cancelButton="true" layoutX="164.0" layoutY="270.0" mnemonicParsing="false" onAction="#buCancelClicked" text="Cancel" />
-      <Label fx:id="laErrorMessage" layoutX="158.0" layoutY="323.0" text="Error" textFill="RED" />
-      <PasswordField fx:id="pfPaswoord" layoutX="164.0" layoutY="212.0" />
+      <Label text="Voornaam:" GridPane.halignment="CENTER">
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin></Label>
+      <Label text="Naam:" GridPane.rowIndex="1" />
+      <Label text="Emailadres:" GridPane.rowIndex="2" />
+      <Label text="Geslacht:" GridPane.rowIndex="3" />
+      <Label text="Login:" GridPane.rowIndex="4" />
+      <Label text="Paswoord" GridPane.rowIndex="5" />
+      <TextField fx:id="tfVoornaam" GridPane.columnIndex="1" />
+      <TextField fx:id="tfNaam" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField fx:id="tfEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <ComboBox fx:id="cbGeslacht" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <TextField fx:id="tfLogin" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <PasswordField fx:id="pfPaswoord" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <Button fx:id="buOk" mnemonicParsing="false" onAction="#buOkClicked" text="Toevoegen" GridPane.rowIndex="6" />
+      <Button fx:id="buCancel" mnemonicParsing="false" onAction="#buCancelClicked" text="Cancel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+      <Label fx:id="laErrorMessage" text="Error" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6" />
    </children>
-</AnchorPane>
+</GridPane>

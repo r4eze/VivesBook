@@ -1,6 +1,8 @@
 package transactie;
 
+import bags.Account;
 import bags.Post;
+import database.AccountDB;
 import database.PostDB;
 import exception.ApplicationException;
 import exception.DBException;
@@ -12,10 +14,15 @@ public class PostTrans implements InterfacePostTrans
     public void postToevoegen(Post post) throws DBException, ApplicationException
     {
         PostDB postDB = new PostDB();
+        AccountDB accountDB = new AccountDB();
         
         if (post == null)
         {
             throw new ApplicationException("Er werd geen post opgegeven");
+        }
+        if(accountDB.zoekAccountOpLogin(post.getEigenaar()) == null)
+        {
+            throw new ApplicationException("Het account bestaat niet");
         }
 
         postDB.toevoegenPost(post);
@@ -24,10 +31,15 @@ public class PostTrans implements InterfacePostTrans
     public Integer postToevoegenReturnId(Post post) throws DBException, ApplicationException
     {
         PostDB postDB = new PostDB();
+        AccountDB accountDB = new AccountDB();
         
         if (post == null)
         {
             throw new ApplicationException("Er werd geen post opgegeven");
+        }
+        if(accountDB.zoekAccountOpLogin(post.getEigenaar()) == null)
+        {
+            throw new ApplicationException("Het account bestaat niet");
         }
 
         return postDB.toevoegenPost(post);
@@ -49,6 +61,12 @@ public class PostTrans implements InterfacePostTrans
         }
         
         postDB.verwijderenPost(postID);
+    }
+    
+    public Post zoekPost(int id) throws DBException, ApplicationException
+    {
+        PostDB postDB = new PostDB();
+        return postDB.zoekPost(id);
     }
     
     public ArrayList<Post> zoekAllePostsVanAccountEnVrienden(String login) throws DBException, ApplicationException
