@@ -58,7 +58,7 @@ public class PostTransTest {
         try
         {
             accountTrans.accountToevoegen(account);
-            post.setId(postTrans.postToevoegenReturnId(post));
+            post = postTrans.postToevoegen(post); // het ID instellen van de post
             
             Post ophaalPost =  postTrans.zoekPost(post.getId());
             
@@ -99,7 +99,7 @@ public class PostTransTest {
         
         try
         {
-            postTrans.postToevoegenReturnId(post);
+            postTrans.postToevoegen(post);
         }
         catch(DBException ex)
         {

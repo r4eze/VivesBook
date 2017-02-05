@@ -15,7 +15,7 @@ import exception.DBException;
  */
 public interface InterfacePostTrans {
 
-    public void postToevoegen(Post post) throws DBException, ApplicationException;
+    public Post postToevoegen(Post post) throws DBException, ApplicationException;
 
     public void postVerwijderen(Integer postID, String verwijderaar) throws DBException, ApplicationException;
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PostTrans implements InterfacePostTrans
 {
     @Override
-    public void postToevoegen(Post post) throws DBException, ApplicationException
+    public Post postToevoegen(Post post) throws DBException, ApplicationException
     {
         PostDB postDB = new PostDB();
         AccountDB accountDB = new AccountDB();
@@ -25,24 +25,9 @@ public class PostTrans implements InterfacePostTrans
             throw new ApplicationException("Het account bestaat niet");
         }
 
-        postDB.toevoegenPost(post);
-    }
-    
-    public Integer postToevoegenReturnId(Post post) throws DBException, ApplicationException
-    {
-        PostDB postDB = new PostDB();
-        AccountDB accountDB = new AccountDB();
+        post.setId(postDB.toevoegenPost(post));
         
-        if (post == null)
-        {
-            throw new ApplicationException("Er werd geen post opgegeven");
-        }
-        if(accountDB.zoekAccountOpLogin(post.getEigenaar()) == null)
-        {
-            throw new ApplicationException("Het account bestaat niet");
-        }
-
-        return postDB.toevoegenPost(post);
+        return post;
     }
 
     @Override

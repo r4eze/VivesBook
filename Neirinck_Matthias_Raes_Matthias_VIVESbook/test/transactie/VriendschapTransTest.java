@@ -164,4 +164,163 @@ public class VriendschapTransTest {
             System.out.println("testVriendschapToevoegenAccountNull - " + ex);
         }
     }
+    
+    // Negatieve test: vriendschap toevoegen zonder vriend
+    @Test
+    public void testVriendschapToevoegenVriendNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            accountTrans.accountToevoegen(vriend);
+            
+            vriendTrans.VriendschapToevoegen(account.getLogin(), null);
+        }catch(DBException ex)
+        {
+            System.out.println("testVriendschapToevoegenVriendNull - " + ex);
+        }
+    }
+    
+    // Negatieve test: vriendschap toevoegen als account niet bestaat
+    @Test
+    public void testVriendschapToevoegenAccountBestaatNiet() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(vriend);
+            
+            vriendTrans.VriendschapToevoegen(account.getLogin(), vriend.getLogin());
+        }catch(DBException ex)
+        {
+            System.out.println("testVriendschapToevoegenAccountBestaatNiet - " + ex);
+        }
+    }
+    
+    // Negatieve test: vriendschap toevoegen als vriend niet bestaat
+    @Test
+    public void testVriendschapToevoegenVriendBestaatNiet() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            
+            vriendTrans.VriendschapToevoegen(account.getLogin(), vriend.getLogin());
+        }catch(DBException ex)
+        {
+            System.out.println("testVriendschapToevoegenVriendBestaatNiet - " + ex);
+        }
+    }
+    
+    // Postieve test: vriendschap verwijderen
+    @Test
+    public void testVriendschapVerwijderen()
+    {     
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            accountTrans.accountToevoegen(vriend);
+            
+            vriendTrans.VriendschapToevoegen(account.getLogin(), vriend.getLogin());
+            vriendTrans.vriendschapVerwijderen(account.getLogin(), vriend.getLogin());
+        }catch(DBException | ApplicationException ex)
+        {
+            System.out.println("testVriendschapVerwijderen - " + ex);
+        }
+    }
+    
+    // Negatieve test: vriendschap verwijderen zonder account
+    @Test
+    public void testVriendschapVerwijderenAccountNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            accountTrans.accountToevoegen(vriend);
+            
+            vriendTrans.VriendschapToevoegen(account.getLogin(), vriend.getLogin());
+            vriendTrans.vriendschapVerwijderen(null, vriend.getLogin());
+        }catch(DBException ex)
+        {
+            System.out.println("testVriendschapVerwijderenAccountNull - " + ex);
+        }catch(ApplicationException ex)
+        {
+            try
+            {
+                vriendTrans.vriendschapVerwijderen(account.getLogin(), vriend.getLogin());
+            }
+            catch(DBException ex1)
+            {
+                System.out.println("testVriendschapVerwijderenAccountNull - " + ex1);
+            }
+            
+            // Exception opnieuw opgooien zodat de test slaagt
+            throw ex;
+        }
+    }
+    
+    // Negatieve test: vriendschap verwijderen zonder vriend
+    @Test
+    public void testVriendschapVerwijderenVriendNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            accountTrans.accountToevoegen(vriend);
+            
+            vriendTrans.VriendschapToevoegen(account.getLogin(), vriend.getLogin());
+            vriendTrans.vriendschapVerwijderen(account.getLogin(), null);
+        }catch(DBException ex)
+        {
+            System.out.println("testVriendschapVerwijderenVriendNull - " + ex);
+        }catch(ApplicationException ex)
+        {
+            try
+            {
+                vriendTrans.vriendschapVerwijderen(account.getLogin(), vriend.getLogin());
+            }
+            catch(DBException ex1)
+            {
+                System.out.println("testVriendschapVerwijderenVriendNull - " + ex1);
+            }
+            
+            // Exception opnieuw opgooien zodat de test slaagt
+            throw ex;
+        }
+    }
+    
+    // Negatieve test: vriendschap verwijderen als account niet bestaat
+    // Lukt niet want je kan geen vriendschap toevoegen als het account niet bestaat,
+    // en je kan een account niet verwijderen als er reeds een vriendschap bestaat
+    
+    // Negatieve test: vriendschap verwijderen als vriend niet bestaat
+    // Lukt niet want je kan geen vriendschap toevoegen als de vriend niet bestaat,
+    // en je kan een account niet verwijderen als er reeds een vriendschap bestaat
+    
+    // Negatieve test: vriendschap verwijderen die niet bestaat
+    @Test
+    public void testVriendschapVerwijderenBestaatNiet() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            accountTrans.accountToevoegen(vriend);
+            
+            vriendTrans.vriendschapVerwijderen(account.getLogin(), vriend.getLogin());
+        }catch(DBException ex)
+        {
+            System.out.println("testVriendschapVerwijderenBestaatNiet - " + ex);
+        }
+    }
 }
