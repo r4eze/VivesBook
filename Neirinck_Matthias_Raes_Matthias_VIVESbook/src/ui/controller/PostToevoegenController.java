@@ -47,8 +47,6 @@ public class PostToevoegenController implements Initializable
     @FXML
     private Label laLikeLabel;
 
-    private Post post = null;
-
     @FXML
     private Button buPostVerwijderen;
 
@@ -102,7 +100,7 @@ public class PostToevoegenController implements Initializable
         
         try
         {
-            nieuweLike.setPostid(postTrans.postToevoegenReturnId(nieuwePost));
+            nieuweLike.setPostid(postTrans.postToevoegen(nieuwePost).getId());
             likeTrans.LikesToevoegen(nieuweLike);
             
             mainApp.laadHomeScherm(loggedInAccount);
