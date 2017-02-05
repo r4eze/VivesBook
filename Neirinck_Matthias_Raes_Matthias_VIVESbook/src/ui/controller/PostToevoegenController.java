@@ -95,6 +95,7 @@ public class PostToevoegenController implements Initializable
         
         try
         {
+            // Mogelijkheid om meteen een like toe te voegen aan de post
             if(cbLikeType.getSelectionModel().getSelectedItem() == null)
             {
                 postTrans.postToevoegen(nieuwePost);

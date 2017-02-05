@@ -29,11 +29,7 @@ public class HomeController implements Initializable
 
     @FXML
     private ListView lvPostView;
-
-    private ArrayList<Post> posts = new ArrayList<>();
-
-    private int postIndex = -1;
-
+    
     @FXML
     private Label laErrorMessage;
 
@@ -71,7 +67,7 @@ public class HomeController implements Initializable
 
         try
         {
-            posts = postTrans.zoekAllePostsVanAccountEnVrienden(account.getLogin());
+            ArrayList<Post> posts = postTrans.zoekAllePostsVanAccountEnVrienden(account.getLogin());
             
             for (Post p : posts)
             {
@@ -86,7 +82,7 @@ public class HomeController implements Initializable
         }
         catch(ApplicationException e)
         {
-            laErrorMessage.setText(null);
+            laErrorMessage.setText(e.getMessage());
         }
     }
 
@@ -99,16 +95,6 @@ public class HomeController implements Initializable
     @FXML
     private void buPostOverzichtClicked(ActionEvent event)
     {
-        /*if (postIndex != -1)
-        {
-            mainApp.laadPostOverzichtScherm(loggedInAccount, (Post) lvPostView.getSelectionModel().getSelectedItem());
-        }
-        else
-        {
-            errorLabel.setVisible(true);
-            errorLabel.setText("Gelieve eerst een post te selecteren");
-        }*/
-        
         mainApp.laadPostOverzichtScherm(loggedInAccount, (Post) lvPostView.getSelectionModel().getSelectedItem());
     }
 
@@ -128,19 +114,5 @@ public class HomeController implements Initializable
     private void buLogoutClicked(ActionEvent event)
     {
         mainApp.laadLoginScherm();
-    }
-
-    @FXML
-    private void postClick(MouseEvent event)
-    {
-        laErrorMessage.setText(null);
-        if (postIndex == lvPostView.getSelectionModel().getSelectedIndex())
-        {
-            buPostOverzichtClicked(null);
-        }
-        else
-        {
-            postIndex = lvPostView.getSelectionModel().getSelectedIndex();
-        }
     }
 }

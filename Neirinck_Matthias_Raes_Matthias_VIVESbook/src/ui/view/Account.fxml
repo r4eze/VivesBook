@@ -22,23 +22,59 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label text="Voornaam:" GridPane.halignment="CENTER">
+      <Label text="Voornaam:">
          <GridPane.margin>
-            <Insets />
+            <Insets left="10.0" />
          </GridPane.margin></Label>
-      <Label text="Naam:" GridPane.rowIndex="1" />
-      <Label text="Emailadres:" GridPane.rowIndex="2" />
-      <Label text="Geslacht:" GridPane.rowIndex="3" />
-      <Label text="Login:" GridPane.rowIndex="4" />
-      <Label text="Paswoord" GridPane.rowIndex="5" />
-      <TextField fx:id="tfVoornaam" GridPane.columnIndex="1" />
-      <TextField fx:id="tfNaam" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <TextField fx:id="tfEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label text="Naam:" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin></Label>
+      <Label text="Emailadres:" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin></Label>
+      <Label text="Geslacht:" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin></Label>
+      <Label text="Login:" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin></Label>
+      <Label text="Paswoord" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin></Label>
+      <TextField fx:id="tfVoornaam" GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin></TextField>
+      <TextField fx:id="tfNaam" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin></TextField>
+      <TextField fx:id="tfEmail" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin></TextField>
       <ComboBox fx:id="cbGeslacht" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <TextField fx:id="tfLogin" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <PasswordField fx:id="pfPaswoord" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <Button fx:id="buOk" mnemonicParsing="false" onAction="#buOkClicked" text="Toevoegen" GridPane.rowIndex="6" />
-      <Button fx:id="buCancel" mnemonicParsing="false" onAction="#buCancelClicked" text="Cancel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+      <TextField fx:id="tfLogin" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin></TextField>
+      <PasswordField fx:id="pfPaswoord" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin></PasswordField>
+      <Button fx:id="buOk" mnemonicParsing="false" onAction="#buOkClicked" text="Toevoegen" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin></Button>
+      <Button fx:id="buCancel" mnemonicParsing="false" onAction="#buCancelClicked" text="Cancel" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin></Button>
       <Label fx:id="laErrorMessage" text="Error" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6" />
    </children>
 </GridPane>

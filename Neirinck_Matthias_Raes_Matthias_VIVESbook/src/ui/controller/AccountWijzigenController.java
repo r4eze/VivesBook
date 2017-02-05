@@ -15,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import transactie.AccountTrans;
 import ui.VIVESbook;
 
@@ -132,19 +133,18 @@ public class AccountWijzigenController implements Initializable{
             accountTrans.accountWijzigen(teWijzigenAccount);
             loggedInAccount = teWijzigenAccount; // niet per se nodig
             
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Succes");
-            alert.setHeaderText(null);
-            alert.setContentText("Uw account werd aangepast");
-            alert.showAndWait();
+            laErrorMessage.setText("Uw account werd aangepast");
+            laErrorMessage.setTextFill(Color.GREEN);
         }
         catch(DBException e)
         {
             laErrorMessage.setText("Contacteer uw beheerder");
+            laErrorMessage.setTextFill(Color.RED);
         }
         catch(ApplicationException e)
         {
             laErrorMessage.setText(e.getMessage());
+            laErrorMessage.setTextFill(Color.RED);
         }
     }
     

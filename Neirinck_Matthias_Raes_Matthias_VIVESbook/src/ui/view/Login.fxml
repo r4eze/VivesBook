@@ -12,8 +12,8 @@
       <Button fx:id="buNieuw" layoutX="66.0" layoutY="189.0" mnemonicParsing="false" onAction="#buNieuwClicked" text="Nieuw" />
       <Label layoutX="52.0" layoutY="77.0" text="login" />
       <Label layoutX="25.0" layoutY="119.0" text="paswoord" />
-      <TextField fx:id="login" layoutX="113.0" layoutY="73.0" />
-      <Label fx:id="errorLabel" layoutX="25.0" layoutY="151.0" prefHeight="37.0" prefWidth="403.0" text="error" textFill="RED" />
-      <PasswordField fx:id="paswoord" layoutX="113.0" layoutY="115.0" />
+      <TextField fx:id="tfLogin" layoutX="113.0" layoutY="73.0" />
+      <Label fx:id="laErrorMessage" layoutX="25.0" layoutY="151.0" prefHeight="37.0" prefWidth="403.0" text="error" textFill="RED" />
+      <PasswordField fx:id="pfPaswoord" layoutX="113.0" layoutY="115.0" />
    </children>
 </AnchorPane>

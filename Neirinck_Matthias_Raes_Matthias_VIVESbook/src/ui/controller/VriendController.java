@@ -39,6 +39,7 @@ public class VriendController implements Initializable
     @FXML
     private Label laErrorMessage;
     
+    // Is nodig om bij te houden door het sorteren
     private ObservableList<Account> obsVrienden;
 
     @Override
@@ -47,6 +48,7 @@ public class VriendController implements Initializable
         laErrorMessage.setText(null);
         obsVrienden = FXCollections.observableArrayList();
         
+        // Vrienden zoeken in de listview a.d.h.v. het textfield
         tfZoekVriend.textProperty().addListener(new ChangeListener<String>()
         {
             @Override
@@ -93,14 +95,18 @@ public class VriendController implements Initializable
         }
     }
 
+    // De listview aanpassen zodat het enkel vrienden bevat waarvan de "newValue" (= waarde van textfield) voorkomt in de naam of voornaam
     public void changeListView(String oldValue, String newValue)
     {
+        // Als de nieuwe waarde korter is dan de oude waarde, moet de listview opnieuw gevuld worden met de originele waarden
+        // Want normaal zijn er meer zoekresultaten bij een kortere waarde
         if(oldValue != null && (newValue.length() < oldValue.length()))
         {
             lvVriend.setItems(obsVrienden);
         }
 
         ObservableList<Account> filteredList = FXCollections.observableArrayList();
+        
         for(Object entry : lvVriend.getItems())
         {
             Account a = (Account) entry;

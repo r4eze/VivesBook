@@ -200,6 +200,8 @@ public class PostOverzichtController implements Initializable{
     @FXML
     private void buLikeToevoegenClicked(ActionEvent event)
     {
+        laErrorMessage.setText(null);
+                
         if (cbLikeType.getSelectionModel().getSelectedItem() == null)
         {
             laErrorMessage.setText("Gelieve een type like te selecteren");

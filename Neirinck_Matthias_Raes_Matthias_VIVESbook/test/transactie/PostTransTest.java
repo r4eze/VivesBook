@@ -48,7 +48,15 @@ public class PostTransTest {
     }
     
     @After
-    public void tearDown() {
+    public void tearDown() 
+    {
+        try{
+            accountDB.verwijderenAccount(account);
+        }
+        catch(DBException ex)
+        {
+            System.out.println("-tearDown- " + ex);
+        }
     }
 
     // Positieve test: post toevoegen
@@ -67,7 +75,6 @@ public class PostTransTest {
             assertEquals(post.getTekst(), ophaalPost.getTekst());
             
             postTrans.postVerwijderen(post.getId(), account.getLogin());
-            accountDB.verwijderenAccount(account);
         }
         catch(DBException | ApplicationException ex)
         {
@@ -106,4 +113,6 @@ public class PostTransTest {
             System.out.println("testPostToevoegen - " + ex);
         }
     }
+    
+    
 }

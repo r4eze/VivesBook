@@ -77,6 +77,7 @@ public class Account implements Comparable<Account>{
         return "Account{" + "voornaam=" + voornaam + ", naam=" + naam + ", emailadres=" + emailadres + ", geslacht=" + geslacht + ", login=" + login + ", paswoord=" + paswoord + '}';
     }*/
     
+    @Override
     public String toString() {
         return voornaam + " " + naam + " | " + login;
     }

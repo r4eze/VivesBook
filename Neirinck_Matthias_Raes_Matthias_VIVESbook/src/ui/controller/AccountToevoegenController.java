@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ui.controller;
 
 import bags.Account;
@@ -20,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import transactie.AccountTrans;
 import ui.VIVESbook;
 
@@ -126,19 +122,18 @@ public class AccountToevoegenController implements Initializable
             
             accountTrans.accountToevoegen(nieuwAccount);
             
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Succes");
-            alert.setHeaderText(null);
-            alert.setContentText("Het account werd aangemaakt");
-            alert.showAndWait();
+            laErrorMessage.setText("Het account werd aangemaakt");
+            laErrorMessage.setTextFill(Color.GREEN);
         }
         catch(DBException e)
         {
             laErrorMessage.setText("Contacteer uw beheerder");
+            laErrorMessage.setTextFill(Color.RED);
         }
         catch(ApplicationException e)
         {
             laErrorMessage.setText(e.getMessage());
+            laErrorMessage.setTextFill(Color.RED);
 
         }
     }
