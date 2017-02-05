@@ -2,12 +2,7 @@ package bags;
 
 
 import datatype.Geslacht;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.time.LocalDateTime;
 
 /**
  *
@@ -20,6 +15,8 @@ public class Account implements Comparable<Account>{
     private Geslacht geslacht;
     private String login;
     private String paswoord;
+    private LocalDateTime lastLogin;
+    private LocalDateTime lastLogout;
 
     public Account() {
     }
@@ -72,10 +69,31 @@ public class Account implements Comparable<Account>{
         this.paswoord = paswoord;
     }
     
+    public LocalDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(LocalDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+    
+    public LocalDateTime getLastLogout() {
+        return lastLogout;
+    }
+
+    public void setLastLogout(LocalDateTime lastLogout) {
+        this.lastLogout = lastLogout;
+    }
+    
     /*@Override
     public String toString() {
         return "Account{" + "voornaam=" + voornaam + ", naam=" + naam + ", emailadres=" + emailadres + ", geslacht=" + geslacht + ", login=" + login + ", paswoord=" + paswoord + '}';
     }*/
+    
+    public boolean isLoggedIn()
+    {
+        return lastLogin.isAfter(lastLogout);
+    }
     
     @Override
     public String toString() {

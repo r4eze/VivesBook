@@ -6,6 +6,7 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.VriendController">
    <children>
@@ -18,4 +19,8 @@
       <Label fx:id="laErrorMessage" layoutX="82.0" layoutY="312.0" prefHeight="17.0" prefWidth="505.0" text="error" textFill="RED" />
       <Label layoutX="28.0" layoutY="52.0" prefHeight="17.0" prefWidth="101.0" text="vriend zoeken:" />
    </children>
+   
+    <stylesheets>
+        <URL value="@style.css" />
+    </stylesheets>
 </AnchorPane>

@@ -1,0 +1,7 @@
+.loggedIn{
+    -fx-background-color: #b9ceac;
+}
+
+.loggedOut{
+    -fx-background-color: #f69b9a;
+}

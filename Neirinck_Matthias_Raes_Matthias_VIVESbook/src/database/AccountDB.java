@@ -9,7 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +43,8 @@ public class AccountDB implements InterfaceAccountDB
                         acc.setPaswoord(r.getString("paswoord"));
                         acc.setEmailadres(r.getString("emailadres"));
                         acc.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
+                        acc.setLastLogin(r.getTimestamp("lastLogin").toLocalDateTime());
+                        acc.setLastLogout(r.getTimestamp("lastLogout").toLocalDateTime());
                         returnAcc = acc;
                     }
                     
@@ -87,6 +92,8 @@ public class AccountDB implements InterfaceAccountDB
                         a.setPaswoord(r.getString("paswoord"));
                         a.setEmailadres(r.getString("emailadres"));
                         a.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
+                        a.setLastLogin(r.getTimestamp("lastLogin").toLocalDateTime());
+                        a.setLastLogout(r.getTimestamp("lastLogout").toLocalDateTime());
                         returnAcc = a;
                     }
                     
@@ -113,7 +120,7 @@ public class AccountDB implements InterfaceAccountDB
     {
         try (Connection conn = ConnectionManager.getConnection();)
         {
-            try (PreparedStatement stat = conn.prepareStatement("INSERT INTO account values(?,?,?,?,?,?)");)
+            try (PreparedStatement stat = conn.prepareStatement("INSERT INTO account(naam, voornaam, login, paswoord, emailadres, geslacht) values(?,?,?,?,?,?)");)
             {
                 stat.setString(1, account.getNaam());
                 stat.setString(2, account.getVoornaam());
@@ -198,5 +205,69 @@ public class AccountDB implements InterfaceAccountDB
         {
             throw new DBException("SQL-exception in verwijderenAccount - connection - " + ex);
         }
+    }
+    
+    public Account inloggenAccount(String login, String paswoord) throws DBException{
+        Account returnAccount = null;
+        
+        try(Connection conn = ConnectionManager.getConnection();){
+            try(PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT * FROM Account WHERE login = ? AND paswoord = ?");){
+                
+                stmt.setString(1, login);
+                stmt.setString(2, paswoord);
+                stmt.execute();
+                
+                try(ResultSet r = stmt.getResultSet()){
+                    Account a = new Account();
+                    
+                    if(r.next()){
+                        a.setNaam(r.getString("naam"));
+                        a.setVoornaam(r.getString("voornaam"));
+                        a.setLogin(r.getString("login"));
+                        a.setPaswoord(r.getString("paswoord"));
+                        a.setEmailadres(r.getString("emailadres"));
+                        a.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
+                        a.setLastLogin(r.getTimestamp("lastLogin").toLocalDateTime());
+                        a.setLastLogout(r.getTimestamp("lastLogout").toLocalDateTime());
+                        returnAccount = a;
+                    }
+                }catch(SQLException sqlEx){
+                    throw new DBException("SQL-exception in inloggenAccount - resultset " + sqlEx);
+                }
+            }catch(SQLException sqlEx){
+                throw new DBException("SQL-Exception in inloggenAccount - statement" + sqlEx);
+            }
+            
+            try(PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE Account SET lastLogin = NOW() WHERE login = ?");){
+                
+                stmt.setString(1, login);
+                stmt.execute();
+            }catch(SQLException sqlEx){
+                throw new DBException("SQL-Exception in inloggenAccount - statement" + sqlEx);
+            }   
+        }catch(SQLException sqlEx){
+            throw new DBException("SQL-exception in inloggenAccount - connection" + sqlEx);
+        }   
+        
+        return returnAccount;
+    }
+    
+    public void uitloggenAccount(String login) throws DBException
+    {
+        try(Connection conn = ConnectionManager.getConnection();){
+            try(PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE Account SET lastLogout = NOW() WHERE login = ?");){
+                        
+                stmt.setString(1, login);
+                stmt.execute();
+                
+            }catch(SQLException sqlEx){
+                throw new DBException("SQL-Exception in inloggenAccount - statement" + sqlEx);
+            }
+        }catch(SQLException sqlEx){
+            throw new DBException("SQL-exception in inloggenAccount - connection" + sqlEx);
+        }    
     }
 }

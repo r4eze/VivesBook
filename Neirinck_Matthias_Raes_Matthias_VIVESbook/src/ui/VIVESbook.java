@@ -4,10 +4,13 @@ import bags.Account;
 import bags.Post;
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import javax.swing.event.HyperlinkEvent;
 import ui.controller.LoginController;
 import ui.controller.AccountToevoegenController;
 import ui.controller.HomeController;
@@ -47,11 +50,19 @@ public class VIVESbook extends Application
             Scene scene = new Scene(root);
             stage.setTitle("VIVESbook - Login");
             stage.setScene(scene);
+            
+            
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                public void handle(WindowEvent we) {
+                    // het verwijderen van de handler via onderstaande code lukte niet, dus oplossen door methode die niets doet :)
+                    // stage.removeEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, stage.getOnCloseRequest());
+                    // Dit is nodig wanneer je van het home scherm naar login of nieuw account scherm gaat en dan het venster sluit
+                }
+            });
         }
         catch (Exception e)
         {
             System.out.println("!!! - " + e.getMessage());
-
         }
     }
     
@@ -73,6 +84,13 @@ public class VIVESbook extends Application
             Scene scene = new Scene(root);
             stage.setTitle("VIVESbook - Home");
             stage.setScene(scene);
+            
+            // Vanuit elk scherm behalve het loginscherm kunnen uitloggen door het venster te sluiten
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                public void handle(WindowEvent we) {
+                    controller.uitloggenAccount();
+                }
+            });
         }
         catch (IOException e)
         {
@@ -147,7 +165,11 @@ public class VIVESbook extends Application
             Scene scene = new Scene(root);
             stage.setTitle("VIVESbook - Nieuw Account aanmaken");
             stage.setScene(scene);
-
+            
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                public void handle(WindowEvent we) {
+                }
+            });
         }
         catch (IOException e)
         {

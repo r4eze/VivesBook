@@ -15,8 +15,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 import transactie.AccountTrans;
 import transactie.VriendschapTrans;
 import ui.VIVESbook;
@@ -84,6 +86,8 @@ public class VriendController implements Initializable
                 obsVrienden.add(a);
                 lvVriend.getItems().add(a);
             }
+            
+            updateListViewColors();
         }
         catch (DBException e)
         {
@@ -117,7 +121,42 @@ public class VriendController implements Initializable
         }
         
         lvVriend.setItems(filteredList);
-    }   
+        updateListViewColors();
+    }
+    
+    // De achtergrondkleur van de cell instellen via een css klasse
+    // Als de vriend ingelogd is: groen
+    // Als de vriend niet ingelogd is: rood
+    public void updateListViewColors()
+    {
+        lvVriend.setCellFactory(new Callback<ListView<Account>, ListCell<Account>>(){
+            @Override
+            public ListCell<Account> call(ListView<Account> p) {
+
+                ListCell<Account> cell = new ListCell<Account>() {
+
+                    @Override
+                    protected void updateItem(Account t, boolean bln) {
+                        super.updateItem(t, bln);
+
+                        if (t != null) {
+                            setText(t.toString());
+
+                            if (t.isLoggedIn()) {
+                                getStyleClass().add("loggedIn");
+                            } else {
+                                getStyleClass().add("loggedOut");
+                            }
+                        } else {
+                            setText("");
+                        }
+                    }
+                };
+
+                return cell;
+            }
+        });
+    }
     
     @FXML
     private void buVriendToevoegenClicked(ActionEvent event)
@@ -165,5 +204,22 @@ public class VriendController implements Initializable
     private void buCancelClicked(ActionEvent event)
     {
         mainApp.laadHomeScherm(loggedInAccount);
+    }
+    
+    public void uitloggenAccount()
+    {
+        AccountTrans accountTrans = new AccountTrans();
+        try
+        {
+            accountTrans.uitloggenAccount(loggedInAccount.getLogin());
+        }
+        catch(DBException e)
+        {
+            laErrorMessage.setText("Contacteer uw beheerder");
+        }
+        catch(ApplicationException e)
+        {
+            laErrorMessage.setText(e.getMessage());
+        }
     }
 }

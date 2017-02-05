@@ -153,4 +153,21 @@ public class AccountWijzigenController implements Initializable{
     {
         mainApp.laadHomeScherm(loggedInAccount);
     }
+    
+    public void uitloggenAccount()
+    {
+        AccountTrans accountTrans = new AccountTrans();
+        try
+        {
+            accountTrans.uitloggenAccount(loggedInAccount.getLogin());
+        }
+        catch(DBException e)
+        {
+            laErrorMessage.setText("Contacteer uw beheerder");
+        }
+        catch(ApplicationException e)
+        {
+            laErrorMessage.setText(e.getMessage());
+        }
+    }
 }

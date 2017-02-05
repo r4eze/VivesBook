@@ -7,14 +7,12 @@ import exception.DBException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
+import transactie.AccountTrans;
 import transactie.PostTrans;
 import ui.VIVESbook;
 
@@ -113,6 +111,37 @@ public class HomeController implements Initializable
     @FXML
     private void buLogoutClicked(ActionEvent event)
     {
-        mainApp.laadLoginScherm();
+        AccountTrans accountTrans = new AccountTrans();
+        
+        try
+        {
+            accountTrans.uitloggenAccount(loggedInAccount.getLogin());
+            mainApp.laadLoginScherm();
+        }
+        catch(DBException e)
+        {
+            laErrorMessage.setText("Contacteer uw beheerder");
+        }
+        catch(ApplicationException e)
+        {
+            laErrorMessage.setText(e.getMessage());
+        }
+    }
+    
+    public void uitloggenAccount()
+    {
+        AccountTrans accountTrans = new AccountTrans();
+        try
+        {
+            accountTrans.uitloggenAccount(loggedInAccount.getLogin());
+        }
+        catch(DBException e)
+        {
+            laErrorMessage.setText("Contacteer uw beheerder");
+        }
+        catch(ApplicationException e)
+        {
+            laErrorMessage.setText(e.getMessage());
+        }
     }
 }

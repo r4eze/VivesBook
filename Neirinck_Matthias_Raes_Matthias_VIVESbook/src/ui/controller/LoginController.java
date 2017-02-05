@@ -40,42 +40,19 @@ public class LoginController implements Initializable
         this.mainApp = mainApp;
     }
 
-    private void login(String login, String passwoord) throws ApplicationException
-    {
-        laErrorMessage.setText(null);
-        AccountDB acct = new AccountDB();
-        Account acc = null;
-        try
-        {
-            acc = acct.zoekAccountOpLogin(login);
-        }
-        catch (DBException e)
-        {
-            laErrorMessage.setText("Database probleem: contacteer uw IT-beheerder");
-        }
-        if (acc == null)
-        {
-            throw new ApplicationException("Gebruiker onbekend");
-        }
-        else
-        {
-            if (acc.getPaswoord().equals(passwoord))
-            {
-                mainApp.laadHomeScherm(acc);
-            }
-            else
-            {
-                throw new ApplicationException("Paswoord incorrect");
-            }
-        }
-    }
-
     @FXML
     private void buLoginClicked(ActionEvent event)
     {
+        laErrorMessage.setText(null);
+        
         try
         {
-            login(tfLogin.getText(), pfPaswoord.getText());
+            AccountTrans accountTrans = new AccountTrans();
+            mainApp.laadHomeScherm(accountTrans.inloggenAccount(tfLogin.getText(), pfPaswoord.getText()));
+        }
+        catch(DBException e)
+        {
+            laErrorMessage.setText("Database probleem: contacteer uw IT-beheerder");
         }
         catch (ApplicationException e)
         {

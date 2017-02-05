@@ -18,6 +18,7 @@ import javafx.scene.control.TextArea;
 import transactie.PostTrans;
 import ui.VIVESbook;
 import javafx.scene.control.ComboBox;
+import transactie.AccountTrans;
 import transactie.LikeTrans;
 
 public class PostToevoegenController implements Initializable
@@ -150,4 +151,21 @@ public class PostToevoegenController implements Initializable
 
     @FXML
     private void buPostVerwijderenClicked(ActionEvent event) {}
+    
+    public void uitloggenAccount()
+    {
+        AccountTrans accountTrans = new AccountTrans();
+        try
+        {
+            accountTrans.uitloggenAccount(loggedInAccount.getLogin());
+        }
+        catch(DBException e)
+        {
+            laErrorMessage.setText("Contacteer uw beheerder");
+        }
+        catch(ApplicationException e)
+        {
+            laErrorMessage.setText(e.getMessage());
+        }
+    }
 }

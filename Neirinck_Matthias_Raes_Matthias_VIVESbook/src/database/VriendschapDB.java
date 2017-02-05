@@ -144,6 +144,8 @@ public class VriendschapDB implements InterfaceVriendschapDB
                         vriend.setPaswoord(r.getString("paswoord"));
                         vriend.setEmailadres(r.getString("emailadres"));
                         vriend.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
+                        vriend.setLastLogin(r.getTimestamp("lastLogin").toLocalDateTime());
+                        vriend.setLastLogout(r.getTimestamp("lastLogout").toLocalDateTime());
                         vrienden.add(vriend);
                     }
                 }

@@ -18,6 +18,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import transactie.AccountTrans;
 import transactie.LikeTrans;
 import transactie.PostTrans;
 import ui.VIVESbook;
@@ -312,5 +313,22 @@ public class PostOverzichtController implements Initializable{
     private void buCancelClicked(ActionEvent event)
     {
         mainApp.laadHomeScherm(loggedInAccount);
+    }
+    
+    public void uitloggenAccount()
+    {
+        AccountTrans accountTrans = new AccountTrans();
+        try
+        {
+            accountTrans.uitloggenAccount(loggedInAccount.getLogin());
+        }
+        catch(DBException e)
+        {
+            laErrorMessage.setText("Contacteer uw beheerder");
+        }
+        catch(ApplicationException e)
+        {
+            laErrorMessage.setText(e.getMessage());
+        }
     }
 }

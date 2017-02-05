@@ -75,6 +75,35 @@ public class AccountTrans implements InterfaceAccountTrans
         
         accountDB.wijzigenAccount(teWijzigenAccount);
     }
+    
+    public Account inloggenAccount(String login, String paswoord) throws DBException, ApplicationException{
+        if(login == null || login.trim().equals(""))
+        {
+            throw new ApplicationException("Login niet ingevuld");
+        }
+        else if(paswoord == null || paswoord.trim().equals(""))
+        {
+            throw new ApplicationException("Paswoord niet ingevuld");
+        }
+        
+        AccountDB accDB = new AccountDB();
+        return accDB.inloggenAccount(login, paswoord);
+    }
+    
+    public void uitloggenAccount(String login) throws DBException, ApplicationException{
+        AccountDB accDB = new AccountDB();
+        
+        if(login == null || login.trim().equals(""))
+        {
+            throw new ApplicationException("Login niet ingevuld");
+        }
+        if(accDB.zoekAccountOpLogin(login) == null)
+        {
+            throw new ApplicationException("Het account bestaat niet");
+        }  
+        
+        accDB.uitloggenAccount(login);
+    }
 
     private void checkAlleVeldenIngevuld(Account acc) throws ApplicationException{
         if(acc.getNaam() == null || acc.getNaam().trim().equals(""))
