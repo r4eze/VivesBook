@@ -60,7 +60,7 @@ public class PostToevoegenController implements Initializable
         lvLikeView.setVisible(false);
         laLikeLabel.setVisible(false);
         buOk.setText("Post toevoegen");
-        
+        //o
         initializeCombobox();
     }
     

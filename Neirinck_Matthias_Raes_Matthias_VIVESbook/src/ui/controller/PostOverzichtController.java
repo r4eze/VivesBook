@@ -280,25 +280,21 @@ public class PostOverzichtController implements Initializable{
                 }
                 catch (ApplicationException e)
                 {
-                    laErrorMessage.setVisible(true);
                     laErrorMessage.setText(e.getMessage());
                 }
                 catch (DBException e)
                 {
                     laErrorMessage.setText("Contacteer uw beheerder");
-                    laErrorMessage.setVisible(true);
                 }
             }
             else
             {
-                laErrorMessage.setVisible(true);
                 laErrorMessage.setText("U kan geen post verwijderen van iemand anders");
             }
         }
         else
         {
             laErrorMessage.setText("U kan geen post verwijderen met likes");
-            laErrorMessage.setVisible(true);
         }
     }
     
