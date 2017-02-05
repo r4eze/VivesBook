@@ -5,6 +5,7 @@ import exception.ApplicationException;
 import exception.DBException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -43,7 +44,7 @@ public class VriendController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        laErrorMessage.setVisible(false);
+        laErrorMessage.setText(null);
         obsVrienden = FXCollections.observableArrayList();
         
         tfZoekVriend.textProperty().addListener(new ChangeListener<String>()
@@ -74,7 +75,8 @@ public class VriendController implements Initializable
         try
         {
             ArrayList<Account> vrienden = vriendTrans.zoekVrienden(loggedInAccount.getLogin());
-            
+            Collections.sort(vrienden); // sorteren op voornaam, naam
+
             for (Account a : vrienden)
             {
                 obsVrienden.add(a);
@@ -121,6 +123,7 @@ public class VriendController implements Initializable
         {
             vriendTrans.VriendschapToevoegen(loggedInAccount.getLogin(), tfVriendNaam.getText());
             lvVriend.getItems().add(new AccountTrans().zoekAccountOpLogin(tfVriendNaam.getText()));
+            Collections.sort(lvVriend.getItems());
         }
         catch (ApplicationException e)
         {

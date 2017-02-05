@@ -128,7 +128,7 @@ public class VriendschapDB implements InterfaceVriendschapDB
         try (Connection conn = ConnectionManager.getConnection();)
         {
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "select * from account where login in (select accountvriendlogin from vriendschap where accountlogin = ?) order by voornaam, naam");)
+                    "select * from account where login in (select accountvriendlogin from vriendschap where accountlogin = ?)");)
             {
                 stmt.setString(1, login);
                 stmt.execute();
@@ -138,11 +138,12 @@ public class VriendschapDB implements InterfaceVriendschapDB
                     while (r.next())
                     {
                         Account vriend = new Account();
-                        vriend.setLogin(r.getString("login"));
-                        vriend.setEmailadres(r.getString("emailadres"));
-                        vriend.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
                         vriend.setNaam(r.getString("naam"));
                         vriend.setVoornaam(r.getString("voornaam"));
+                        vriend.setLogin(r.getString("login"));
+                        vriend.setPaswoord(r.getString("paswoord"));
+                        vriend.setEmailadres(r.getString("emailadres"));
+                        vriend.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
                         vrienden.add(vriend);
                     }
                 }
@@ -164,7 +165,10 @@ public class VriendschapDB implements InterfaceVriendschapDB
         return vrienden;
     }
 
-    /*public ArrayList<Account> zoekVrienden(String login, String zoek) throws DBException
+    /*
+    beter om te sorteren in de interface laag
+    
+    public ArrayList<Account> zoekVrienden(String login, String zoek) throws DBException
     {
         ArrayList<Account> vrienden = new ArrayList<>();
         if (zoek == null || zoek.equals(""))

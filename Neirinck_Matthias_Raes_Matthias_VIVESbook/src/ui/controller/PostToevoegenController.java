@@ -60,7 +60,6 @@ public class PostToevoegenController implements Initializable
         lvLikeView.setVisible(false);
         laLikeLabel.setVisible(false);
         buOk.setText("Post toevoegen");
-        //o
         initializeCombobox();
     }
     
@@ -88,21 +87,29 @@ public class PostToevoegenController implements Initializable
     private void buOkClicked(ActionEvent event)
     {
         laErrorMessage.setText(null);
+        
         PostTrans postTrans = new PostTrans();
         Post nieuwePost = new Post();
         nieuwePost.setEigenaar(loggedInAccount.getLogin());
         nieuwePost.setTekst(taPostInhoud.getText());
         
-        LikeTrans likeTrans = new LikeTrans();
-        Like nieuweLike = new Like();
-        nieuweLike.setAccountlogin(loggedInAccount.getLogin());
-        nieuweLike.setType((LikeType) cbLikeType.getSelectionModel().getSelectedItem());
-        
         try
         {
-            nieuweLike.setPostid(postTrans.postToevoegen(nieuwePost).getId());
-            likeTrans.LikesToevoegen(nieuweLike);
-            
+            if(cbLikeType.getSelectionModel().getSelectedItem() == null)
+            {
+                postTrans.postToevoegen(nieuwePost);
+            }
+            else
+            {
+                LikeTrans likeTrans = new LikeTrans();
+                Like nieuweLike = new Like();
+                nieuweLike.setAccountlogin(loggedInAccount.getLogin());
+                nieuweLike.setType((LikeType) cbLikeType.getSelectionModel().getSelectedItem());
+                
+                nieuweLike.setPostid(postTrans.postToevoegen(nieuwePost).getId());
+                likeTrans.LikesToevoegen(nieuweLike);
+            }
+
             mainApp.laadHomeScherm(loggedInAccount);
         }
         catch (ApplicationException e)

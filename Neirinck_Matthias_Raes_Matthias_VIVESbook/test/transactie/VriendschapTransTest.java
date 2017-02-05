@@ -6,6 +6,7 @@ import database.AccountDB;
 import datatype.Geslacht;
 import exception.ApplicationException;
 import exception.DBException;
+import java.util.ArrayList;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -321,6 +322,113 @@ public class VriendschapTransTest {
         }catch(DBException ex)
         {
             System.out.println("testVriendschapVerwijderenBestaatNiet - " + ex);
+        }
+    }
+    
+    // Positieve test: vriendschap zoeken die niet bestaat
+    @Test
+    public void testZoekVriendschapBestaatNiet()
+    {
+        try
+        {
+            assertEquals(null, vriendTrans.zoekVriendschap(account.getLogin(), vriend.getLogin()));
+        }
+        catch(DBException | ApplicationException ex)
+        {
+            System.out.println("testZoekVriendschapBestaatNiet - " + ex);
+        }
+    }
+    
+    // Negatieve test: vriendschap zoeken zonder account
+    @Test
+    public void testZoekVriendschapAccountNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            Vriendschap ophaalVriendschap = vriendTrans.zoekVriendschap(null, vriend.getLogin());
+        }catch(DBException ex)
+        {
+            System.out.println("testZoekVriendschapAccountNull - " + ex);
+        }
+    }
+    
+    // Negatieve test: vriendschap zoeken zonder vriend
+    @Test
+    public void testZoekVriendschapVriendNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            Vriendschap ophaalVriendschap = vriendTrans.zoekVriendschap(account.getLogin(), null);
+        }catch(DBException ex)
+        {
+            System.out.println("testZoekVriendschapVriendNull - " + ex);
+        }
+    }
+    
+    // Positieve test: vrienden zoeken
+    @Test
+    public void testZoekVrienden()
+    {
+        Account vriend2 = new Account();
+        vriend2.setNaam("Jansens");
+        vriend2.setVoornaam("Jan");
+        vriend2.setLogin("janjansens");
+        vriend2.setPaswoord("geheim123");
+        vriend2.setEmailadres("janjansens@hotmail.com");
+        vriend2.setGeslacht(Geslacht.M);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            accountTrans.accountToevoegen(vriend);
+            accountTrans.accountToevoegen(vriend2);
+            
+            vriendTrans.VriendschapToevoegen(account.getLogin(), vriend.getLogin());
+            vriendTrans.VriendschapToevoegen(account.getLogin(), vriend2.getLogin());
+            
+            ArrayList<Account> vrienden = vriendTrans.zoekVrienden(account.getLogin());
+            
+            Account ophaalVriend = vrienden.get(1);
+            Account ophaalVriend2 = vrienden.get(0);
+            
+            assertEquals("Petersen", ophaalVriend.getNaam());
+            assertEquals("Peter", ophaalVriend.getVoornaam());
+            assertEquals("peterpetersen", ophaalVriend.getLogin());
+            assertEquals("wachtwoord12345", ophaalVriend.getPaswoord());
+            assertEquals("peter@hotmail.com", ophaalVriend.getEmailadres());
+            assertEquals(Geslacht.M, ophaalVriend.getGeslacht());
+            
+            assertEquals("Jansens", ophaalVriend2.getNaam());
+            assertEquals("Jan", ophaalVriend2.getVoornaam());
+            assertEquals("janjansens", ophaalVriend2.getLogin());
+            assertEquals("geheim123", ophaalVriend2.getPaswoord());
+            assertEquals("janjansens@hotmail.com", ophaalVriend2.getEmailadres());
+            assertEquals(Geslacht.M, ophaalVriend2.getGeslacht());
+            
+            vriendTrans.vriendschapVerwijderen(account.getLogin(), vriend.getLogin());
+            vriendTrans.vriendschapVerwijderen(account.getLogin(), vriend2.getLogin());
+            accountDB.verwijderenAccount(vriend2);
+        }catch(DBException | ApplicationException ex){
+            System.out.println("testZoekVrienden - " + ex);
+        }
+    }
+    
+    // Negatieve test: vrienden zoeken zonder account
+    @Test
+    public void testZoekVriendenAccountNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            ArrayList<Account> vrienden = vriendTrans.zoekVrienden(null);
+        }catch(DBException ex)
+        {
+            System.out.println("testZoekVriendenAccountNull - " + ex);
         }
     }
 }

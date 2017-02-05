@@ -59,6 +59,7 @@ public class PostOverzichtController implements Initializable{
         initializeLikeListView(selectedPost);
         initializeCombobox();
         taPostInhoud.setText(selectedPost.getTekst());
+        
         if (selectedPost.getEigenaar().equals(loggedInAccount.getLogin()))
         {
             buPostVerwijderen.setDisable(false);
@@ -72,6 +73,7 @@ public class PostOverzichtController implements Initializable{
         }
         
         int indexLike = getIndexLikeFromAccount(loggedInAccount.getLogin());
+        
         if(indexLike != -1)
         {
             buLikeToevoegen.setDisable(true);
@@ -112,7 +114,7 @@ public class PostOverzichtController implements Initializable{
         cbLikeType.getItems().add(LikeType.boos);
     }
     
-    // returnt de index in lvLikeView van de like voor het accountlogin in de parameter
+    // returnt de index van de like in lvLikeView voor het accountlogin in de parameter
     // -1 als er geen like voor dat account bestaat
     private int getIndexLikeFromAccount(String accountLogin)
     {
@@ -163,12 +165,8 @@ public class PostOverzichtController implements Initializable{
         }
         else
         {
-            Like like = new Like();
-            like.setType((LikeType) cbLikeType.getSelectionModel().getSelectedItem());
-            like.setAccountlogin(loggedInAccount.getLogin());
-            like.setPostid(selectedPost.getId());
-            
             int indexLike = getIndexLikeFromAccount(loggedInAccount.getLogin());
+            
             if (indexLike == -1)
             {
                 laErrorMessage.setText("Je hebt de post nog niet geliket");
@@ -176,10 +174,15 @@ public class PostOverzichtController implements Initializable{
             else
             {
                 LikeTrans likeTrans = new LikeTrans();
+                Like like = new Like();
+                like.setType((LikeType) cbLikeType.getSelectionModel().getSelectedItem());
+                like.setAccountlogin(loggedInAccount.getLogin());
+                like.setPostid(selectedPost.getId());
+                
                 try
                 {
                     likeTrans.likeWijzigen(like);
-                    lvLikeView.getItems().set(indexLike, like);
+                    lvLikeView.getItems().set(indexLike, like); // De like wijzigen op de juiste plaats in de listview
                     
                 }
                 catch(DBException e)
@@ -203,16 +206,18 @@ public class PostOverzichtController implements Initializable{
         }
         else
         {
-            LikeTrans tr = new LikeTrans();
-            Like like = new Like();
-            like.setAccountlogin(loggedInAccount.getLogin());
-            like.setPostid(selectedPost.getId());
-            like.setType(LikeType.valueOf(cbLikeType.getValue().toString()));
-            if (getIndexLikeFromAccount(like.getAccountlogin()) == -1)
+            
+            if (getIndexLikeFromAccount(loggedInAccount.getLogin()) == -1)
             {
+                LikeTrans likeTrans = new LikeTrans();
+                Like like = new Like();
+                like.setAccountlogin(loggedInAccount.getLogin());
+                like.setPostid(selectedPost.getId());
+                like.setType(LikeType.valueOf(cbLikeType.getValue().toString()));
+            
                 try
                 {
-                    tr.LikesToevoegen(like);
+                    likeTrans.LikesToevoegen(like);
                     lvLikeView.getItems().add(like);
                     buLikeToevoegen.setDisable(true);
                     buLikeWijzigen.setDisable(false);

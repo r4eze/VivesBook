@@ -48,7 +48,6 @@ public class VriendschapTrans implements InterfaceVriendschapTrans
     public void vriendschapVerwijderen(String account, String vriend) throws DBException, ApplicationException
     {
         VriendschapDB vriendDB = new VriendschapDB();
-        AccountTrans accTrans = new AccountTrans();
         
         if(account == null)
         {
@@ -57,18 +56,13 @@ public class VriendschapTrans implements InterfaceVriendschapTrans
         if(vriend == null){
             throw new ApplicationException("Er werd geen vriend meegegven");
         }
-        if(accTrans.zoekAccountOpLogin(vriend) == null)
-        {
-            throw new ApplicationException("Vriend bestaat niet");
-        }
-        if(accTrans.zoekAccountOpLogin(account) == null)
-        {
-            throw new ApplicationException("Account bestaat niet");
-        }
         if(vriendDB.zoekVriendschap(account, vriend) == null && vriendDB.zoekVriendschap(vriend, account) == null)
         {
             throw new ApplicationException("De vriendschap bestaat niet");
         }
+        
+        // Het doet er niet toe of het account of vriend niet bestaat in de database
+        // want normaal kan je dan geen vriendschap toevoegen en je krijgt geen errors op database niveau
         
         vriendDB.verwijderenVriendschap(account, vriend);
     }
@@ -76,18 +70,27 @@ public class VriendschapTrans implements InterfaceVriendschapTrans
     public Vriendschap zoekVriendschap(String account, String vriend) throws DBException, ApplicationException
     {
         VriendschapDB vriendDB = new VriendschapDB();
+        
+        if(account == null)
+        {
+            throw new ApplicationException("Er werd geen account meegegeven");
+        }
+        if(vriend == null){
+            throw new ApplicationException("Er werd geen vriend meegegven");
+        }
+        
         return vriendDB.zoekVriendschap(account, vriend);
     }
 
     public ArrayList<Account> zoekVrienden(String login) throws DBException, ApplicationException
     {
         VriendschapDB vriendDB = new VriendschapDB();
+        
+        if(login == null)
+        {
+            throw new ApplicationException("Er werd geen account meegegeven");
+        }
+        
         return vriendDB.zoekVrienden(login);
     }
-    
-    /*public ArrayList<Account> zoekVrienden(String login, String zoek) throws DBException, ApplicationException
-    {
-        VriendschapDB vriendDB = new VriendschapDB();
-        return vriendDB.zoekVrienden(login, zoek);
-    }*/
 }

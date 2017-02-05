@@ -13,7 +13,7 @@ import datatype.Geslacht;
  *
  * @author Katrien.Deleu
  */
-public class Account {
+public class Account implements Comparable<Account>{
     private String voornaam;
     private String naam;
     private String emailadres;
@@ -79,5 +79,18 @@ public class Account {
     
     public String toString() {
         return voornaam + " " + naam + " | " + login;
+    }
+
+    // Eerst sorteren op voornaam, dan op naam
+    @Override
+    public int compareTo(Account a) {
+        if(voornaam.compareTo(a.getVoornaam()) == 0)
+        {
+            return naam.compareTo(a.getNaam());
+        }
+        else
+        {
+            return voornaam.compareTo(a.getVoornaam());
+        }
     }
 }
