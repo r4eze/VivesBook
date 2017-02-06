@@ -157,7 +157,7 @@ public class PostToevoegenController implements Initializable
         AccountTrans accountTrans = new AccountTrans();
         try
         {
-            accountTrans.uitloggenAccount(loggedInAccount.getLogin());
+            accountTrans.uitloggenAccount(loggedInAccount.getLogin(), loggedInAccount.getPaswoord());
         }
         catch(DBException e)
         {

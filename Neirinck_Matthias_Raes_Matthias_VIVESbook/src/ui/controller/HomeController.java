@@ -115,7 +115,7 @@ public class HomeController implements Initializable
         
         try
         {
-            accountTrans.uitloggenAccount(loggedInAccount.getLogin());
+            accountTrans.uitloggenAccount(loggedInAccount.getLogin(), loggedInAccount.getPaswoord());
             mainApp.laadLoginScherm();
         }
         catch(DBException e)
@@ -133,7 +133,7 @@ public class HomeController implements Initializable
         AccountTrans accountTrans = new AccountTrans();
         try
         {
-            accountTrans.uitloggenAccount(loggedInAccount.getLogin());
+            accountTrans.uitloggenAccount(loggedInAccount.getLogin(), loggedInAccount.getPaswoord());
         }
         catch(DBException e)
         {

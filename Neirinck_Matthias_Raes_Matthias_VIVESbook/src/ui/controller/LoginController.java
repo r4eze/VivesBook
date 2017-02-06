@@ -48,7 +48,15 @@ public class LoginController implements Initializable
         try
         {
             AccountTrans accountTrans = new AccountTrans();
-            mainApp.laadHomeScherm(accountTrans.inloggenAccount(tfLogin.getText(), pfPaswoord.getText()));
+            if(accountTrans.passwordMatchesLogin(tfLogin.getText(), pfPaswoord.getText()))
+            {
+                accountTrans.inloggenAccount(tfLogin.getText(), pfPaswoord.getText());
+                mainApp.laadHomeScherm(accountTrans.zoekAccountOpLogin(tfLogin.getText()));
+            }
+            else
+            {
+                throw new ApplicationException("Login of paswoord incorrect");
+            }
         }
         catch(DBException e)
         {

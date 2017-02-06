@@ -207,67 +207,129 @@ public class AccountDB implements InterfaceAccountDB
         }
     }
     
-    public Account inloggenAccount(String login, String paswoord) throws DBException{
-        Account returnAccount = null;
+    // past de lastLogin van het account aan en returnt dit
+    public LocalDateTime inloggenAccount(String login, String paswoord) throws DBException{
+        LocalDateTime lastLogin = null;
         
         try(Connection conn = ConnectionManager.getConnection();){
             try(PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT * FROM Account WHERE login = ? AND paswoord = ?");){
+                    "UPDATE Account SET lastLogin = NOW() WHERE login = ? AND paswoord = ?");){
+                
+                stmt.setString(1, login);
+                stmt.setString(2, paswoord);
+                stmt.execute();
+            }catch(SQLException sqlEx){
+                throw new DBException("SQL-Exception in inloggenAccount - statement" + sqlEx);
+            }
+            
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT lastLogin FROM Account WHERE login = ? AND paswoord = ?");)
+            {
+                stmt.setString(1, login);
+                stmt.setString(2, paswoord);
+                stmt.execute();
+                
+                try (ResultSet r = stmt.getResultSet())
+                {
+                    if (r.next())
+                    {
+                        lastLogin = r.getTimestamp("lastLogin").toLocalDateTime();
+                    }
+                    
+                    return lastLogin;
+                }
+                catch (SQLException ex)
+                {
+                    System.out.println(ex.getMessage());
+                    throw new DBException("SQL-exception in inloggenAccount - resultset - " + ex);
+                }
+            }
+            catch (SQLException ex)
+            {
+                throw new DBException("SQL-exception in inloggenAccount - statement - " + ex);
+            }
+        }catch(SQLException sqlEx){
+            throw new DBException("SQL-exception in inloggenAccount - connection" + sqlEx);
+        }   
+    }
+    
+    // past de lastLogout van het account aan en returnt dit
+    public LocalDateTime uitloggenAccount(String login, String paswoord) throws DBException
+    {
+        LocalDateTime lastLogout = null;
+        
+        try(Connection conn = ConnectionManager.getConnection();){
+            try(PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE Account SET lastLogout = NOW() WHERE login = ? AND paswoord = ?");){
+                        
+                stmt.setString(1, login);
+                stmt.setString(2, paswoord);
+                stmt.execute();
+                
+            }catch(SQLException sqlEx){
+                throw new DBException("SQL-Exception in uitloggenAccount - statement" + sqlEx);
+            }
+            
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT lastLogout FROM Account WHERE login = ? AND paswoord = ?");)
+            {
+                stmt.setString(1, login);
+                stmt.setString(2, paswoord);
+                stmt.execute();
+                
+                try (ResultSet r = stmt.getResultSet())
+                {
+                    if (r.next())
+                    {
+                        lastLogout = r.getTimestamp("lastLogout").toLocalDateTime();
+                    }
+                    
+                    return lastLogout;
+                }
+                catch (SQLException ex)
+                {
+                    System.out.println(ex.getMessage());
+                    throw new DBException("SQL-exception in uitloggenAccount - resultset - " + ex);
+
+                }
+            }
+            catch (SQLException ex)
+            {
+                throw new DBException("SQL-exception in uitloggenAccount - statement - " + ex);
+            }
+        }catch(SQLException sqlEx){
+            throw new DBException("SQL-exception in uitloggenAccount - connection" + sqlEx);
+        }    
+    }
+    
+    // returnt 1 als het paswoord overeenkomt met de login
+    // returnt 0 als dit niet zo is
+    public boolean passwordMatchesLogin(String login, String paswoord) throws DBException
+    {
+        try (Connection conn = ConnectionManager.getConnection();)
+        {
+            try
+            {
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM account WHERE login=? AND paswoord = ?");
                 
                 stmt.setString(1, login);
                 stmt.setString(2, paswoord);
                 stmt.execute();
                 
                 try(ResultSet r = stmt.getResultSet()){
-                    Account a = new Account();
-                    
-                    if(r.next()){
-                        a.setNaam(r.getString("naam"));
-                        a.setVoornaam(r.getString("voornaam"));
-                        a.setLogin(r.getString("login"));
-                        a.setPaswoord(r.getString("paswoord"));
-                        a.setEmailadres(r.getString("emailadres"));
-                        a.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
-                        a.setLastLogin(r.getTimestamp("lastLogin").toLocalDateTime());
-                        a.setLastLogout(r.getTimestamp("lastLogout").toLocalDateTime());
-                        returnAccount = a;
-                    }
-                }catch(SQLException sqlEx){
-                    throw new DBException("SQL-exception in inloggenAccount - resultset " + sqlEx);
+                    return r.next();
                 }
-            }catch(SQLException sqlEx){
-                throw new DBException("SQL-Exception in inloggenAccount - statement" + sqlEx);
+                catch(SQLException ex)
+                {
+                    throw new DBException("SQL-exception in passwordMatchesLogin - resultset - " + ex);
+                }
             }
-            
-            try(PreparedStatement stmt = conn.prepareStatement(
-                    "UPDATE Account SET lastLogin = NOW() WHERE login = ?");){
-                
-                stmt.setString(1, login);
-                stmt.execute();
-            }catch(SQLException sqlEx){
-                throw new DBException("SQL-Exception in inloggenAccount - statement" + sqlEx);
-            }   
-        }catch(SQLException sqlEx){
-            throw new DBException("SQL-exception in inloggenAccount - connection" + sqlEx);
-        }   
-        
-        return returnAccount;
-    }
-    
-    public void uitloggenAccount(String login) throws DBException
-    {
-        try(Connection conn = ConnectionManager.getConnection();){
-            try(PreparedStatement stmt = conn.prepareStatement(
-                    "UPDATE Account SET lastLogout = NOW() WHERE login = ?");){
-                        
-                stmt.setString(1, login);
-                stmt.execute();
-                
-            }catch(SQLException sqlEx){
-                throw new DBException("SQL-Exception in inloggenAccount - statement" + sqlEx);
+            catch (SQLException ex)
+            {
+                throw new DBException("SQL-exception in passwordMatchesLogin - statement - " + ex);
             }
-        }catch(SQLException sqlEx){
-            throw new DBException("SQL-exception in inloggenAccount - connection" + sqlEx);
-        }    
+        }
+        catch (SQLException ex)
+        {
+            throw new DBException("SQL-exception in passwordMatchesLogin - connection - " + ex);
+        }
     }
 }

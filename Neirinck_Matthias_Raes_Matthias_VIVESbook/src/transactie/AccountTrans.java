@@ -4,6 +4,7 @@ import bags.Account;
 import database.AccountDB;
 import exception.ApplicationException;
 import exception.DBException;
+import java.time.LocalDateTime;
 
 public class AccountTrans implements InterfaceAccountTrans
 {
@@ -76,33 +77,60 @@ public class AccountTrans implements InterfaceAccountTrans
         accountDB.wijzigenAccount(teWijzigenAccount);
     }
     
-    public Account inloggenAccount(String login, String paswoord) throws DBException, ApplicationException{
+    public LocalDateTime inloggenAccount(String login, String paswoord) throws DBException, ApplicationException{
+        AccountDB accDB = new AccountDB();
+        
         if(login == null || login.trim().equals(""))
         {
             throw new ApplicationException("Login niet ingevuld");
         }
-        else if(paswoord == null || paswoord.trim().equals(""))
+        if(paswoord == null || paswoord.trim().equals(""))
+        {
+            throw new ApplicationException("Paswoord niet ingevuld");
+        }
+        if(!accDB.passwordMatchesLogin(login, paswoord))
+        {
+            throw new ApplicationException("Login of paswoord incorrect");
+        }
+        
+        return accDB.inloggenAccount(login, paswoord);
+    }
+    
+    public LocalDateTime uitloggenAccount(String login, String paswoord) throws DBException, ApplicationException{
+        AccountDB accDB = new AccountDB();
+        
+        if(login == null || login.trim().equals(""))
+        {
+            throw new ApplicationException("Login niet ingevuld");
+        }
+        if(paswoord == null || paswoord.trim().equals(""))
+        {
+            throw new ApplicationException("Paswoord niet ingevuld");
+        }
+        if(!accDB.passwordMatchesLogin(login, paswoord))
+        {
+            throw new ApplicationException("Login of paswoord incorrect");
+        }
+        
+        return accDB.uitloggenAccount(login, paswoord);
+    }
+    
+    // returnt 1 als het paswoord overeenkomt met de login
+    // returnt 0 als dit niet zo is
+    public boolean passwordMatchesLogin(String login, String paswoord) throws DBException, ApplicationException
+    {
+        AccountDB accDB = new AccountDB();
+        
+        if(login == null || login.trim().equals(""))
+        {
+            throw new ApplicationException("Login niet ingevuld");
+        }
+        if(paswoord == null || paswoord.trim().equals(""))
         {
             throw new ApplicationException("Paswoord niet ingevuld");
         }
         
-        AccountDB accDB = new AccountDB();
-        return accDB.inloggenAccount(login, paswoord);
-    }
-    
-    public void uitloggenAccount(String login) throws DBException, ApplicationException{
-        AccountDB accDB = new AccountDB();
-        
-        if(login == null || login.trim().equals(""))
-        {
-            throw new ApplicationException("Login niet ingevuld");
-        }
-        if(accDB.zoekAccountOpLogin(login) == null)
-        {
-            throw new ApplicationException("Het account bestaat niet");
-        }  
-        
-        accDB.uitloggenAccount(login);
+        return accDB.passwordMatchesLogin(login, paswoord);
     }
 
     private void checkAlleVeldenIngevuld(Account acc) throws ApplicationException{
