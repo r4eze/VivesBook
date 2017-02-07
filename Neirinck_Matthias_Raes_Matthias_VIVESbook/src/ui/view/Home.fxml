@@ -1,20 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="563.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.HomeController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.HomeController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="NEVER" minWidth="150.0" prefWidth="150.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="NEVER" />
+  </rowConstraints>
    <children>
-      <Label fx:id="laAccount" layoutX="59.0" layoutY="57.0" prefHeight="17.0" prefWidth="284.0" text="Label" />
-      <ListView fx:id="lvPostView" layoutX="52.0" layoutY="137.0" prefHeight="200.0" prefWidth="310.0" />
-      <Button fx:id="buAccountWijzigen" layoutX="405.0" layoutY="53.0" mnemonicParsing="false" onAction="#buAccountWijzigenClicked" text="Account Wijzigen" />
-      <Button fx:id="buPostToevoegen" layoutX="405.0" layoutY="175.0" mnemonicParsing="false" onAction="#buPostToevoegenClicked" prefHeight="25.0" prefWidth="109.0" text="Post Toevoegen" />
-      <Button fx:id="buPostOverzicht" layoutX="405.0" layoutY="212.0" mnemonicParsing="false" onAction="#buPostOverzichtClicked" prefHeight="25.0" prefWidth="109.0" text="Post Overzicht" />
-      <Button fx:id="buVriendToevoegen" layoutX="405.0" layoutY="95.0" mnemonicParsing="false" onAction="#buVriendToevoegenClicked" prefHeight="25.0" prefWidth="109.0" text="Vrienden" />
-      <Button fx:id="buLogout" layoutX="33.0" layoutY="350.0" mnemonicParsing="false" onAction="#buLogoutClicked" text="Logout" />
-      <Label fx:id="laErrorMessage" layoutX="126.0" layoutY="354.0" text="error" textFill="RED" />
+      <Label fx:id="laAccount" text="voornaam naam (login)">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin></Label>
+      <ListView fx:id="lvPostView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </GridPane.margin>
+      </ListView>
+      <Label fx:id="laErrorMessage" text="error" textFill="RED" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin></Label>
+      <Button fx:id="buAccountWijzigen" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#buAccountWijzigenClicked" text="Account wijzigen" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+         <GridPane.margin>
+            <Insets left="10.0" right="10.0" />
+         </GridPane.margin></Button>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <Button fx:id="buPostOverzicht" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#buPostOverzichtClicked" text="Post overzicht">
+               <VBox.margin>
+                  <Insets bottom="10.0" right="10.0" />
+               </VBox.margin></Button>
+            <Button fx:id="buPostToevoegen" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#buPostToevoegenClicked" text="Post toevoegen">
+               <VBox.margin>
+                  <Insets bottom="10.0" right="10.0" />
+               </VBox.margin></Button>
+            <Button fx:id="buVrienden" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#buVriendenClicked" text="Vrienden">
+               <VBox.margin>
+                  <Insets bottom="10.0" right="10.0" />
+               </VBox.margin></Button>
+            <Button fx:id="buLogout" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#buLogoutClicked" text="Logout">
+               <VBox.margin>
+                  <Insets right="10.0" />
+               </VBox.margin></Button>
+         </children>
+         <padding>
+            <Insets left="10.0" top="10.0" />
+         </padding>
+      </VBox>
    </children>
-</AnchorPane>
+</GridPane>

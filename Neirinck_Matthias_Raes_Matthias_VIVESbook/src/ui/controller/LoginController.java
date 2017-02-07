@@ -1,7 +1,5 @@
 package ui.controller;
 
-import bags.Account;
-import database.AccountDB;
 import exception.ApplicationException;
 import exception.DBException;
 import java.net.URL;
@@ -9,7 +7,6 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -48,6 +45,7 @@ public class LoginController implements Initializable
         try
         {
             AccountTrans accountTrans = new AccountTrans();
+            
             if(accountTrans.passwordMatchesLogin(tfLogin.getText(), pfPaswoord.getText()))
             {
                 accountTrans.inloggenAccount(tfLogin.getText(), pfPaswoord.getText());

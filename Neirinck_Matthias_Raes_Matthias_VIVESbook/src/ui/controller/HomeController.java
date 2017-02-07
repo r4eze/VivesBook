@@ -93,7 +93,14 @@ public class HomeController implements Initializable
     @FXML
     private void buPostOverzichtClicked(ActionEvent event)
     {
-        mainApp.laadPostOverzichtScherm(loggedInAccount, (Post) lvPostView.getSelectionModel().getSelectedItem());
+        if(!lvPostView.getSelectionModel().isEmpty())
+        {
+            mainApp.laadPostOverzichtScherm(loggedInAccount, (Post) lvPostView.getSelectionModel().getSelectedItem());
+        }
+        else
+        {
+            laErrorMessage.setText("Geen post geselecteerd");
+        }
     }
 
     @FXML
@@ -103,7 +110,7 @@ public class HomeController implements Initializable
     }
 
     @FXML
-    private void buVriendToevoegenClicked(ActionEvent event)
+    private void buVriendenClicked(ActionEvent event)
     {
         mainApp.laadVriendScherm(loggedInAccount);
     }

@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javax.swing.event.HyperlinkEvent;
 import ui.controller.LoginController;
 import ui.controller.AccountToevoegenController;
 import ui.controller.HomeController;
@@ -47,7 +46,7 @@ public class VIVESbook extends Application
             // referentie naar hier bewaren in de controller
             controller.setMainApp(this);
 
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 450, 200);
             stage.setTitle("VIVESbook - Login");
             stage.setScene(scene);
             
