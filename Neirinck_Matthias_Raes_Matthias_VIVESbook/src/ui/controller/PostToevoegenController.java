@@ -46,20 +46,16 @@ public class PostToevoegenController implements Initializable
     private Button buOk, buCancel;
 
     @FXML
-    private Label laLikeLabel;
-
-    @FXML
     private Button buPostVerwijderen;
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
         laErrorMessage.setText(null);
-        buPostVerwijderen.setVisible(false);
-        buLikeToevoegen.setVisible(false);
-        buLikeWijzigen.setVisible(false);
-        lvLikeView.setVisible(false);
-        laLikeLabel.setVisible(false);
+        buPostVerwijderen.setDisable(true);
+        buLikeToevoegen.setDisable(true);
+        buLikeWijzigen.setDisable(true);
+        lvLikeView.setDisable(true);
         buOk.setText("Post toevoegen");
         initializeCombobox();
     }
