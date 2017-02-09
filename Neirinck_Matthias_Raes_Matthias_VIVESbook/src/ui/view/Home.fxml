@@ -22,7 +22,7 @@
          <GridPane.margin>
             <Insets left="10.0" />
          </GridPane.margin></Label>
-      <ListView fx:id="lvPostView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+      <ListView fx:id="lvPosts" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>

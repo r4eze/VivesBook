@@ -5,3 +5,11 @@
 .loggedOut{
     -fx-background-color: #f69b9a;
 }
+
+.loggedIn:selected{
+    -fx-background-color: #72BCD4;
+}
+
+.loggedOut:selected{
+    -fx-background-color: #72BCD4;
+}

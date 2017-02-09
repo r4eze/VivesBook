@@ -7,9 +7,12 @@ import exception.DBException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import transactie.AccountTrans;
@@ -26,7 +29,10 @@ public class HomeController implements Initializable
     private Label laAccount;
 
     @FXML
-    private ListView lvPostView;
+    private ListView lvPosts;
+    
+    @FXML
+    private Button buPostOverzicht;
     
     @FXML
     private Label laErrorMessage;
@@ -35,6 +41,25 @@ public class HomeController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         laErrorMessage.setText(null);
+        buPostOverzicht.setDisable(true);
+        
+        // De button om een post overzicht te tonen enkel beschikbaar maken als er een post geselecteerd is
+        // Kan ook opgelost worden door een if te schrijven en error te tonen,
+        // maar door de button te disablen volgen we dezelfde ideologie als in het post overzicht scherm (buttons voor like disablen)
+        lvPosts.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Post>() {
+            
+            @Override
+            public void changed(ObservableValue<? extends Post> observable, Post oldValue, Post newValue) {
+                if(newValue != null)
+                {
+                    buPostOverzicht.setDisable(false);
+                }
+                else
+                {
+                    buPostOverzicht.setDisable(true);
+                }
+            }
+        });
     }
 
     public void setMainApp(VIVESbook mainApp)
@@ -69,10 +94,10 @@ public class HomeController implements Initializable
             
             for (Post p : posts)
             {
-                lvPostView.getItems().add(p);
+                lvPosts.getItems().add(p);
             }
             
-            lvPostView.setFixedCellSize(-1);
+            lvPosts.setFixedCellSize(-1);
         }
         catch (DBException e)
         {
@@ -93,9 +118,11 @@ public class HomeController implements Initializable
     @FXML
     private void buPostOverzichtClicked(ActionEvent event)
     {
-        if(!lvPostView.getSelectionModel().isEmpty())
+        // Deze if is in principe niet nodig doordat de button disabled is als er geen post geselecteerd is
+        // maar je weet maar nooit...
+        if(!lvPosts.getSelectionModel().isEmpty())
         {
-            mainApp.laadPostOverzichtScherm(loggedInAccount, (Post) lvPostView.getSelectionModel().getSelectedItem());
+            mainApp.laadPostOverzichtScherm(loggedInAccount, (Post) lvPosts.getSelectionModel().getSelectedItem());
         }
         else
         {

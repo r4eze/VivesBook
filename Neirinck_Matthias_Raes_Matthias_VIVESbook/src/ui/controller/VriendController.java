@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -33,10 +34,13 @@ public class VriendController implements Initializable
     private TextField tfZoekVriend;
 
     @FXML
-    private ListView lvVriend;
+    private ListView lvVrienden;
 
     @FXML
     private TextField tfVriendNaam;
+    
+    @FXML
+    private Button buVerwijderVriend;
 
     @FXML
     private Label laErrorMessage;
@@ -48,6 +52,7 @@ public class VriendController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         laErrorMessage.setText(null);
+        buVerwijderVriend.setDisable(true);
         obsVrienden = FXCollections.observableArrayList();
         
         // Vrienden zoeken in de listview a.d.h.v. het textfield
@@ -58,7 +63,22 @@ public class VriendController implements Initializable
             {
                 changeListView(oldValue, newValue);
             }
-
+        });
+        
+        // De button om een vriend te verwijderen enkel beschikbaar maken als er een vriend geselecteerd is
+        lvVrienden.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Account>() {
+            
+            @Override
+            public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {       
+                if(newValue != null)
+                {
+                    buVerwijderVriend.setDisable(false);
+                }
+                else
+                {
+                    buVerwijderVriend.setDisable(true);
+                }
+            }
         });
     }
     
@@ -73,18 +93,20 @@ public class VriendController implements Initializable
         initializeListview();
     }
     
+    // De listview lvVrienden opvullen met alle vrienden van het ingelogde account
     public void initializeListview()
     {
-        VriendschapTrans vriendTrans = new VriendschapTrans();
         try
         {
+            VriendschapTrans vriendTrans = new VriendschapTrans();
+            
             ArrayList<Account> vrienden = vriendTrans.zoekVrienden(loggedInAccount.getLogin());
             Collections.sort(vrienden); // sorteren op voornaam, naam
 
             for (Account a : vrienden)
             {
                 obsVrienden.add(a);
-                lvVriend.getItems().add(a);
+                lvVrienden.getItems().add(a);
             }
             
             updateListViewColors();
@@ -106,30 +128,31 @@ public class VriendController implements Initializable
         // Want normaal zijn er meer zoekresultaten bij een kortere waarde
         if(oldValue != null && (newValue.length() < oldValue.length()))
         {
-            lvVriend.setItems(obsVrienden);
+            lvVrienden.setItems(obsVrienden);
         }
 
         ObservableList<Account> filteredList = FXCollections.observableArrayList();
         
-        for(Object entry : lvVriend.getItems())
+        for(Object entry : lvVrienden.getItems())
         {
             Account a = (Account) entry;
+            
             if(a.getNaam().toLowerCase().contains(newValue.toLowerCase()) || a.getVoornaam().toLowerCase().contains(newValue.toLowerCase()))
             {
                 filteredList.add(a);
             }
         }
         
-        lvVriend.setItems(filteredList);
+        lvVrienden.setItems(filteredList);
         updateListViewColors();
     }
     
-    // De achtergrondkleur van de cell instellen via een css klasse
+    // De achtergrondkleur van de cellen in listview lvVriend instellen via een css klasse
     // Als de vriend ingelogd is: groen
     // Als de vriend niet ingelogd is: rood
     public void updateListViewColors()
     {
-        lvVriend.setCellFactory(new Callback<ListView<Account>, ListCell<Account>>(){
+        lvVrienden.setCellFactory(new Callback<ListView<Account>, ListCell<Account>>(){
             @Override
             public ListCell<Account> call(ListView<Account> p) {
 
@@ -167,8 +190,8 @@ public class VriendController implements Initializable
         try
         {
             vriendTrans.VriendschapToevoegen(loggedInAccount.getLogin(), tfVriendNaam.getText());
-            lvVriend.getItems().add(new AccountTrans().zoekAccountOpLogin(tfVriendNaam.getText()));
-            Collections.sort(lvVriend.getItems());
+            lvVrienden.getItems().add(new AccountTrans().zoekAccountOpLogin(tfVriendNaam.getText()));
+            Collections.sort(lvVrienden.getItems());
         }
         catch (ApplicationException e)
         {
@@ -184,11 +207,15 @@ public class VriendController implements Initializable
     private void buVerwijderVriendClicked(ActionEvent event)
     {
         laErrorMessage.setText(null);
-        VriendschapTrans vriendTrans = new VriendschapTrans();
+        
         try
         {
-            vriendTrans.vriendschapVerwijderen(loggedInAccount.getLogin(), ((Account) lvVriend.getItems().get(lvVriend.getSelectionModel().getSelectedIndex())).getLogin());
-            lvVriend.getItems().remove(lvVriend.getSelectionModel().getSelectedIndex());
+            VriendschapTrans vriendTrans = new VriendschapTrans();
+            
+            vriendTrans.vriendschapVerwijderen(loggedInAccount.getLogin(), ((Account) lvVrienden.getItems().get(lvVrienden.getSelectionModel().getSelectedIndex())).getLogin());
+            lvVrienden.getItems().remove(lvVrienden.getSelectionModel().getSelectedIndex());
+            updateListViewColors();
+            lvVrienden.getSelectionModel().clearSelection();
         }
         catch(DBException e)
         {
@@ -209,6 +236,7 @@ public class VriendController implements Initializable
     public void uitloggenAccount()
     {
         AccountTrans accountTrans = new AccountTrans();
+        
         try
         {
             accountTrans.uitloggenAccount(loggedInAccount.getLogin(), loggedInAccount.getPaswoord());

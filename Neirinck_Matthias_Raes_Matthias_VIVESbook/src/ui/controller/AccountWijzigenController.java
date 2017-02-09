@@ -122,29 +122,36 @@ public class AccountWijzigenController implements Initializable{
     private void buOkClicked(ActionEvent event)
     {
         laErrorMessage.setText(null);
+        laErrorMessage.setTextFill(Color.RED);
         
         try
         {
             checkAlleVeldenIngevuld();
             
             Account teWijzigenAccount = getAccountFromFields();
-            AccountTrans accountTrans = new AccountTrans();
             
-            accountTrans.accountWijzigen(teWijzigenAccount);
-            loggedInAccount = teWijzigenAccount; // niet per se nodig
+            if(teWijzigenAccount.equals(loggedInAccount))
+            {
+                laErrorMessage.setText("Er werd niets gewijzigd");
+            }
+            else
+            {
+                AccountTrans accountTrans = new AccountTrans();
             
-            laErrorMessage.setText("Uw account werd aangepast");
-            laErrorMessage.setTextFill(Color.GREEN);
+                accountTrans.accountWijzigen(teWijzigenAccount);
+                loggedInAccount = teWijzigenAccount;
+
+                laErrorMessage.setText("Uw account werd aangepast");
+                laErrorMessage.setTextFill(Color.GREEN);
+            }
         }
         catch(DBException e)
         {
             laErrorMessage.setText("Contacteer uw beheerder");
-            laErrorMessage.setTextFill(Color.RED);
         }
         catch(ApplicationException e)
         {
             laErrorMessage.setText(e.getMessage());
-            laErrorMessage.setTextFill(Color.RED);
         }
     }
     
@@ -157,6 +164,7 @@ public class AccountWijzigenController implements Initializable{
     public void uitloggenAccount()
     {
         AccountTrans accountTrans = new AccountTrans();
+        
         try
         {
             accountTrans.uitloggenAccount(loggedInAccount.getLogin(), loggedInAccount.getPaswoord());

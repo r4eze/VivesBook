@@ -307,7 +307,10 @@ public class PostOverzichtController implements Initializable{
     }
     
     @FXML
-    private void buOkClicked(ActionEvent event) { }
+    private void buOkClicked(ActionEvent event)
+    { 
+        mainApp.laadHomeScherm(loggedInAccount);
+    }
     
     @FXML
     private void buCancelClicked(ActionEvent event)

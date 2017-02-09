@@ -112,4 +112,11 @@ public class Account implements Comparable<Account>{
             return voornaam.compareTo(a.getVoornaam());
         }
     }
+    public boolean equals(Account account)
+    {
+        return (this.getVoornaam().equals(account.getVoornaam()) && this.getNaam().equals(account.getNaam())
+                && this.getEmailadres().equals(account.getEmailadres()) && this.getLogin().equals(account.getLogin())
+                && this.getPaswoord().equals(account.getPaswoord()) && this.getGeslacht() == account.getGeslacht());
+        
+    }
 }
