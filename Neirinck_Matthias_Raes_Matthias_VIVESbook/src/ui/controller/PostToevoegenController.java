@@ -34,7 +34,7 @@ public class PostToevoegenController implements Initializable
     private Label laErrorMessage;
 
     @FXML
-    private ListView lvLikeView;
+    private ListView lvLikes;
 
     @FXML
     private Button buLikeToevoegen, buLikeWijzigen, buLikeVerwijderen;
@@ -55,7 +55,7 @@ public class PostToevoegenController implements Initializable
         buPostVerwijderen.setDisable(true);
         buLikeToevoegen.setDisable(true);
         buLikeWijzigen.setDisable(true);
-        lvLikeView.setDisable(true);
+        lvLikes.setDisable(true);
         buOk.setText("Post toevoegen");
         initializeCombobox();
     }
