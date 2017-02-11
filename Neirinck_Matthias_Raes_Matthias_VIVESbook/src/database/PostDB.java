@@ -1,21 +1,14 @@
 package database;
 
-import bags.Account;
 import bags.Post;
 import database.connect.ConnectionManager;
-import datatype.Geslacht;
-import exception.ApplicationException;
 import exception.DBException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Set;
 
 public class PostDB implements InterfacePostDB
 {

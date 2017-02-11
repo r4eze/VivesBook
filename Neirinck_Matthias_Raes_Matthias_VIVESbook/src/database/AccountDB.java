@@ -4,17 +4,11 @@ import bags.Account;
 import database.connect.ConnectionManager;
 import datatype.Geslacht;
 import exception.DBException;
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AccountDB implements InterfaceAccountDB
 {
@@ -143,7 +137,7 @@ public class AccountDB implements InterfaceAccountDB
         }
         catch (SQLException ex)
         {
-            throw new DBException("SQL-exception in toevoegenAccount - at connection - " + ex);
+            throw new DBException("SQL-exception in toevoegenAccount - connection - " + ex);
         }
     }
 

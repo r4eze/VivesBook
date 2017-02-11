@@ -3,7 +3,6 @@ package database;
 import bags.Like;
 import database.connect.ConnectionManager;
 import datatype.LikeType;
-import exception.ApplicationException;
 import exception.DBException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class LikeDB implements InterfaceLikesDB
             {
                 stat.setString(1, like.getAccountlogin());
                 stat.setInt(2, like.getPostid());
-                stat.setString(3, like.getType().toString());
+                stat.setString(3, like.getType().name());
                 stat.execute();
             }
             catch (SQLException ex)
@@ -172,5 +171,4 @@ public class LikeDB implements InterfaceLikesDB
 
         return likeList;
     }
-
 }

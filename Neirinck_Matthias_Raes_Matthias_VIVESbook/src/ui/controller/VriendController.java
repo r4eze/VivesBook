@@ -191,7 +191,7 @@ public class VriendController implements Initializable
         {
             vriendTrans.VriendschapToevoegen(loggedInAccount.getLogin(), tfVriendNaam.getText());
             lvVrienden.getItems().add(new AccountTrans().zoekAccountOpLogin(tfVriendNaam.getText()));
-            Collections.sort(lvVrienden.getItems());
+            Collections.sort(lvVrienden.getItems()); // zodat de pas toegevoegde vriend niet onderaan de lijst staat
         }
         catch (ApplicationException e)
         {

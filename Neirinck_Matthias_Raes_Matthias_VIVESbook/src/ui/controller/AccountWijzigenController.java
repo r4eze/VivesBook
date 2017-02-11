@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -53,6 +52,7 @@ public class AccountWijzigenController implements Initializable{
         this.mainApp = mainApp;
     }
     
+    // De velden op het scherm opvullen met de velden van het account
     public void setData(Account account)
     {
         this.loggedInAccount = account;
@@ -65,6 +65,7 @@ public class AccountWijzigenController implements Initializable{
         cbGeslacht.getSelectionModel().select(account.getGeslacht());
     }
     
+    // De combobox cbGeslacht opvullen met de mogelijke geslachten
     private void initializeCombobox()
     {
         cbGeslacht.getItems().add(Geslacht.M);
@@ -91,11 +92,11 @@ public class AccountWijzigenController implements Initializable{
         }
         if (textFieldNotFilledUp(tfEmail))
         {
-            throw new ApplicationException("adres is niet ingevuld");
+            throw new ApplicationException("Adres is niet ingevuld");
         }
         if (cbGeslacht.getValue() == null)
         {
-            throw new ApplicationException("Gelieve een geslacht te kiezen");
+            throw new ApplicationException("Geslacht is niet ingevuld");
         }
     }
 
@@ -104,6 +105,7 @@ public class AccountWijzigenController implements Initializable{
         return text.getText().trim().equals("");
     }
     
+    // Returnt het account dat gemaakt wordt door de velden op het scherm
     private Account getAccountFromFields()
     {
         Account account = new Account();

@@ -84,6 +84,7 @@ public class HomeController implements Initializable
         this.loggedInAccount = account;
     }
 
+    // De listview lvPosts opvullen met alle posts
     public void initializePostListView(Account account)
     {
         PostTrans postTrans = new PostTrans();
@@ -97,7 +98,7 @@ public class HomeController implements Initializable
                 lvPosts.getItems().add(p);
             }
             
-            lvPosts.setFixedCellSize(-1);
+            //lvPosts.setFixedCellSize(-1); waarom nodig?
         }
         catch (DBException e)
         {
@@ -165,6 +166,7 @@ public class HomeController implements Initializable
     public void uitloggenAccount()
     {
         AccountTrans accountTrans = new AccountTrans();
+        
         try
         {
             accountTrans.uitloggenAccount(loggedInAccount.getLogin(), loggedInAccount.getPaswoord());

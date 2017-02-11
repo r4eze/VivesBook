@@ -36,6 +36,8 @@ public class AccountTransTest {
         account.setPaswoord("wachtwoord123");
         account.setEmailadres("miekedefoort@hotmail.com");
         account.setGeslacht(Geslacht.V);
+        // geen lastLogin en lastLogout toevoegen want dit gebeurt automatisch door de database
+        // maar daarom kan je ook geen assertEquals ervan doen bij toevoegenAccount, zoekAccountOpLogin...
     }
     
      // Het account dat in de setup gemaakt werd, terug verwijderen
@@ -48,10 +50,10 @@ public class AccountTransTest {
         }
     }
     
-    // Positieve test: account toevoegen
+    // Positieve test: account toevoegen met vrouwelijk geslacht
     // Positieve test: account zoeken op login
     @Test
-    public void testAccountToevoegen(){
+    public void testAccountToevoegenGeslachtV(){
         try{
             accountTrans.accountToevoegen(account);
             Account ophaalAcc = accountTrans.zoekAccountOpLogin(account.getLogin());
@@ -62,6 +64,26 @@ public class AccountTransTest {
             assertEquals("wachtwoord123", ophaalAcc.getPaswoord());
             assertEquals("miekedefoort@hotmail.com", ophaalAcc.getEmailadres());
             assertEquals(Geslacht.V, ophaalAcc.getGeslacht());
+        }catch(DBException | ApplicationException ex){
+            System.out.println("testAccountToevoegen - " + ex);
+        }
+    }
+    
+    // Positieve test: account toevoegen met mannelijk geslacht
+    // Positieve test: account zoeken op login
+    @Test
+    public void testAccountToevoegenGeslachtM(){
+        try{
+            account.setGeslacht(Geslacht.M);
+            accountTrans.accountToevoegen(account);
+            Account ophaalAcc = accountTrans.zoekAccountOpLogin(account.getLogin());
+            
+            assertEquals("Defoort", ophaalAcc.getNaam());
+            assertEquals("Mieke", ophaalAcc.getVoornaam());
+            assertEquals("miekedefoort", ophaalAcc.getLogin());
+            assertEquals("wachtwoord123", ophaalAcc.getPaswoord());
+            assertEquals("miekedefoort@hotmail.com", ophaalAcc.getEmailadres());
+            assertEquals(Geslacht.M, ophaalAcc.getGeslacht());
         }catch(DBException | ApplicationException ex){
             System.out.println("testAccountToevoegen - " + ex);
         }
@@ -119,7 +141,7 @@ public class AccountTransTest {
         try{
             accountTrans.accountToevoegen(null);
         }catch(DBException ex){
-            System.out.println("testNullAccountToevoegen - " + ex);
+            System.out.println("testAccountToevoegenNull - " + ex);
         }
     }
 
@@ -131,7 +153,7 @@ public class AccountTransTest {
         try{
             accountTrans.accountWijzigen(null);
         }catch(DBException ex){
-            System.out.println("testNullAccountWijzigen - " + ex);
+            System.out.println("testAccountWijzigenNull - " + ex);
         }
     }
     
@@ -613,6 +635,245 @@ public class AccountTransTest {
             Account ophaalAcc = accountTrans.zoekAccountOpEmail("");
         }catch(DBException ex){
             System.out.println("testZoekAccountOpEmailLeeg - " + ex);
+        }
+    }
+    
+    // Postitieve test: account inloggen
+    @Test
+    public void testInloggenAccount()
+    {
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            account.setLastLogin(accountTrans.inloggenAccount(account.getLogin(), account.getPaswoord()));
+            Account ophaalAcc = accountTrans.zoekAccountOpLogin("miekedefoort");
+            
+            assertEquals("Defoort", ophaalAcc.getNaam());
+            assertEquals("Mieke", ophaalAcc.getVoornaam());
+            assertEquals("miekedefoort", ophaalAcc.getLogin());
+            assertEquals("wachtwoord123", ophaalAcc.getPaswoord());
+            assertEquals("miekedefoort@hotmail.com", ophaalAcc.getEmailadres());
+            assertEquals(Geslacht.V, ophaalAcc.getGeslacht());
+            assertEquals(account.getLastLogin(), ophaalAcc.getLastLogin());
+        }
+        catch(DBException | ApplicationException ex)
+        {
+            System.out.println("testInloggenAccount - " + ex);
+        }
+    }
+    
+    // Negatieve test: account inloggen zonder login
+    @Test
+    public void testInloggenAccountLoginNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            account.setLastLogin(accountTrans.inloggenAccount(null, account.getPaswoord()));
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testInloggenAccountLoginNull - " + ex);
+        }
+    }
+    
+    // Negatieve test: account inloggen zonder paswoord
+    @Test
+    public void testInloggenAccountPaswoordNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            account.setLastLogout(accountTrans.uitloggenAccount(account.getLogin(), null));
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testInloggenAccountPaswoordNull - " + ex);
+        }
+    }
+    
+    // Negatieve test: account inloggen maar login klopt niet (of account bestaat niet)
+    @Test
+    public void testInloggenAccountLoginVerkeerd() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            account.setLastLogin(accountTrans.inloggenAccount("verkeerdlogin", account.getPaswoord()));
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testInloggenAccountLoginVerkeerd - " + ex);
+        }
+    }
+    
+    // Negatieve test: account inloggen maar paswoord klopt niet (of account bestaat niet)
+    @Test
+    public void testInloggenAccountPaswoordVerkeerd() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            account.setLastLogin(accountTrans.inloggenAccount(account.getLogin(), "verkeerdpaswoord"));
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testInloggenAccountPaswoordVerkeerd - " + ex);
+        }
+    }
+    
+    // Negatieve test: account uitloggen zonder login
+    @Test
+    public void testUitloggenAccountLoginNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            account.setLastLogout(accountTrans.uitloggenAccount(null, account.getPaswoord()));
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testUitloggenAccountLoginNull - " + ex);
+        }
+    }
+    
+    // Negatieve test: account uitloggen zonder paswoord
+    @Test
+    public void testUitloggenAccountPaswoordNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            account.setLastLogout(accountTrans.uitloggenAccount(account.getLogin(), null));
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testUitloggenAccountPaswoordNull - " + ex);
+        }
+    }
+    
+    // Negatieve test: account uitloggen maar verkeerd login (of account bestaat niet)
+    @Test
+    public void testUitloggenAccountLoginVerkeerd() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            account.setLastLogout(accountTrans.uitloggenAccount("verkeerdlogin", account.getPaswoord()));
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testUitloggenAccountLoginVerkeerd - " + ex);
+        }
+    }
+    
+    // Negatieve test: account uitloggen maar verkeerd paswoord (of account bestaat niet)
+    @Test
+    public void testUitloggenAccountPaswoordVerkeerd() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            account.setLastLogout(accountTrans.uitloggenAccount(account.getLogin(), "verkeerdpaswoord"));
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testUitloggenAccountPaswoordVerkeerd - " + ex);
+        }
+    }
+    
+    // Positieve test: controleren als paswoord overeenkomt met login
+    @Test
+    public void testPasswordMatchesLogin()
+    {
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            assertEquals(accountTrans.passwordMatchesLogin(account.getLogin(), account.getPaswoord()), true);
+        }
+        catch(DBException | ApplicationException ex)
+        {
+            System.out.println("testPasswordMatchesLogin - " + ex);
+        }
+    }
+    
+    // Positieve test: controleren als paswoord overeenkomt met login met verkeerd login
+    @Test
+    public void testPasswordMatchesLoginLoginVerkeerd()
+    {
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            assertEquals(accountTrans.passwordMatchesLogin("verkeerdlogin", account.getPaswoord()), false);
+        }
+        catch(DBException | ApplicationException ex)
+        {
+            System.out.println("testPasswordMatchesLoginLoginVerkeerd - " + ex);
+        }
+    }
+    
+    // Positieve test: controleren als paswoord overeenkomt met login met verkeerd paswoord
+    @Test
+    public void testPasswordMatchesLoginPaswoordVerkeerd()
+    {
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            assertEquals(accountTrans.passwordMatchesLogin(account.getLogin(), "verkeerdpaswoord"), false);
+        }
+        catch(DBException | ApplicationException ex)
+        {
+            System.out.println("testPasswordMatchesLoginPaswoordVerkeerd - " + ex);
+        }
+    }
+    
+    // Negatieve test: controleren als paswoord overeenkomt met login zonder login
+    @Test
+    public void testPasswordMatchesLoginLoginNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            accountTrans.passwordMatchesLogin(null, account.getPaswoord());
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testPasswordMatchesLoginLoginNull - " + ex);
+        }
+    }
+    
+    // Negatieve test: controleren als paswoord overeenkomt met login zonder paswoord
+    @Test
+    public void testPasswordMatchesLoginPaswoordNull() throws ApplicationException
+    {
+        thrown.expect(ApplicationException.class);
+        
+        try
+        {
+            accountTrans.accountToevoegen(account);
+            accountTrans.passwordMatchesLogin(account.getLogin(), null);
+        }
+        catch(DBException ex)
+        {
+            System.out.println("testPasswordMatchesLoginPaswoordNull - " + ex);
         }
     }
 }

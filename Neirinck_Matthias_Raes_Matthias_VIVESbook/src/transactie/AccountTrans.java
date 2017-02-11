@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 public class AccountTrans implements InterfaceAccountTrans
 {
-
     @Override
     public void accountToevoegen(Account acc) throws ApplicationException, DBException
     {
@@ -88,7 +87,7 @@ public class AccountTrans implements InterfaceAccountTrans
         {
             throw new ApplicationException("Paswoord niet ingevuld");
         }
-        if(!accDB.passwordMatchesLogin(login, paswoord))
+        if(!passwordMatchesLogin(login, paswoord))
         {
             throw new ApplicationException("Login of paswoord incorrect");
         }
@@ -107,7 +106,7 @@ public class AccountTrans implements InterfaceAccountTrans
         {
             throw new ApplicationException("Paswoord niet ingevuld");
         }
-        if(!accDB.passwordMatchesLogin(login, paswoord))
+        if(!passwordMatchesLogin(login, paswoord))
         {
             throw new ApplicationException("Login of paswoord incorrect");
         }

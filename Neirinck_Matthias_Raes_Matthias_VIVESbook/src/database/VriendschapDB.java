@@ -128,7 +128,7 @@ public class VriendschapDB implements InterfaceVriendschapDB
         try (Connection conn = ConnectionManager.getConnection();)
         {
             try (PreparedStatement stmt = conn.prepareStatement(
-                    "select * from account where login in (select accountvriendlogin from vriendschap where accountlogin = ?)");)
+                    "SELECT * FROM account WHERE login IN (SELECT accountvriendlogin FROM vriendschap WHERE accountlogin = ?)");)
             {
                 stmt.setString(1, login);
                 stmt.execute();
@@ -168,7 +168,7 @@ public class VriendschapDB implements InterfaceVriendschapDB
     }
 
     /*
-    beter om te sorteren in de interface laag
+    beter om te filteren in de interface laag
     
     public ArrayList<Account> zoekVrienden(String login, String zoek) throws DBException
     {

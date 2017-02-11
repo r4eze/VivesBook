@@ -10,14 +10,14 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controller.VriendController">
    <children>
-      <TextField fx:id="tfZoekVriend" layoutX="151.0" layoutY="48.0" promptText="Zoektekst" />
-      <ListView fx:id="lvVrienden" layoutX="82.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button fx:id="buVriendToevoegen" layoutX="501.0" layoutY="100.0" mnemonicParsing="false" onAction="#buVriendToevoegenClicked" text="Toevoegen" />
-      <TextField fx:id="tfVriendNaam" layoutX="341.0" layoutY="100.0" promptText="Login van vriend" />
-      <Button fx:id="buVerwijderVriend" layoutX="341.0" layoutY="166.0" mnemonicParsing="false" onAction="#buVerwijderVriendClicked" prefHeight="25.0" prefWidth="236.0" text="Verwijderen" />
-      <Button layoutX="443.0" layoutY="329.0" mnemonicParsing="false" onAction="#buCancelClicked" text="Ok" />
-      <Label fx:id="laErrorMessage" layoutX="82.0" layoutY="312.0" prefHeight="17.0" prefWidth="505.0" text="error" textFill="RED" />
-      <Label layoutX="28.0" layoutY="52.0" prefHeight="17.0" prefWidth="101.0" text="vriend zoeken:" />
+      <TextField fx:id="tfZoekVriend" layoutX="97.0" layoutY="15.0" promptText="Zoektekst" />
+      <ListView fx:id="lvVrienden" layoutX="15.0" layoutY="55.0" prefHeight="200.0" prefWidth="200.0" />
+      <Button fx:id="buVriendToevoegen" layoutX="502.0" layoutY="28.0" mnemonicParsing="false" onAction="#buVriendToevoegenClicked" text="Toevoegen" />
+      <TextField fx:id="tfVriendNaam" layoutX="316.0" layoutY="31.0" promptText="Login van vriend" />
+      <Button fx:id="buVerwijderVriend" layoutX="325.0" layoutY="98.0" mnemonicParsing="false" onAction="#buVerwijderVriendClicked" prefHeight="25.0" prefWidth="236.0" text="Verwijderen" />
+      <Button layoutX="66.0" layoutY="342.0" mnemonicParsing="false" onAction="#buCancelClicked" text="Ok" />
+      <Label fx:id="laErrorMessage" layoutX="138.0" layoutY="346.0" prefHeight="17.0" prefWidth="505.0" text="error" textFill="RED" />
+      <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="101.0" text="vriend zoeken:" />
    </children>
    
     <stylesheets>

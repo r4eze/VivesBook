@@ -2,8 +2,6 @@ package database;
 
 import bags.Account;
 import bags.Vriendschap;
-import database.AccountDB;
-import database.VriendschapDB;
 import datatype.Geslacht;
 import exception.DBException;
 import org.junit.After;
