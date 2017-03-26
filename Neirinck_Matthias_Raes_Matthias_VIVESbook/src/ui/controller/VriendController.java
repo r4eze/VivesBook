@@ -164,11 +164,16 @@ public class VriendController implements Initializable
 
                         if (t != null) {
                             setText(t.toString());
-
+                            System.out.println("niet null");
                             if (t.isLoggedIn()) {
-                                getStyleClass().add("loggedIn");
+                                // zodat de klasse niet meerdere keren wordt toegevoegd
+                                if(!getStyleClass().contains("loggedIn")){
+                                    getStyleClass().add("loggedIn");
+                                }
                             } else {
-                                getStyleClass().add("loggedOut");
+                                if(!getStyleClass().contains("loggedOut")){
+                                    getStyleClass().add("loggedOut");
+                                }
                             }
                         } else {
                             setText("");
@@ -192,6 +197,7 @@ public class VriendController implements Initializable
             vriendTrans.VriendschapToevoegen(loggedInAccount.getLogin(), tfVriendNaam.getText());
             lvVrienden.getItems().add(new AccountTrans().zoekAccountOpLogin(tfVriendNaam.getText()));
             Collections.sort(lvVrienden.getItems()); // zodat de pas toegevoegde vriend niet onderaan de lijst staat
+            tfVriendNaam.clear();
         }
         catch (ApplicationException e)
         {

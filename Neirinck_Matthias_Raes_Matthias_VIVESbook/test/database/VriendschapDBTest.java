@@ -5,7 +5,7 @@ import bags.Vriendschap;
 import datatype.Geslacht;
 import exception.DBException;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -82,63 +82,21 @@ public class VriendschapDBTest {
         }
     }
     
-    // Negatieve test: vriendschap bestaat al
-    @Test
-    public void testToevoegenVriendschapBestaatAl(){
-        
-    }
-    
-    // Negatieve test: vriendschap toevoegen zonder account
-    @Test
-    public void testToevoegenVriendschapAccountNull(){
-        
-    }
-    
-    // Negatieve test: vriendschap toevoegen zonder vriend
-    @Test
-    public void testToevoegenVriendschapVriendNull(){
-        
-    }
-    
     // Positieve test: vriendschap verwijderen
     @Test
     public void testVerwijderenVriendschap(){
-        
-    }
-    
-    // Negatieve test: vriendschap verwijderen account bestaat niet
-    @Test
-    public void testVerwijderenVriendschapAccountBestaatNiet(){
-        
-    }
-    
-    // Negatieve test: vriendschap verwijderen vriend bestaat niet
-    @Test
-    public void testVerwijderenVriendschapVriendBestaatNiet(){
-        
-    }
-    
-    // Negatieve test: vriendschap verwijderen zonder account
-    @Test
-    public void testVerwijderenVriendschapAccountNull(){
-        
-    }
-    
-    // Negatieve test: vriendschap verwijderen zonder vriend
-    @Test
-    public void testVerwijderenVriendschapVriendNull(){
-        
-    }
-    
-    // Positieve test: vriendschap zoeken
-    @Test
-    public void testZoekVriendschap(){
-        
-    }
-    
-    // Positieve test: alle vriendendschappen zoeken
-    @Test
-    public void testZoekVrienden(){
-        
+        try{
+            accountDB.toevoegenAccount(account);
+            accountDB.toevoegenAccount(vriend);
+            vriendDB.toevoegenVriendschap(account.getLogin(), vriend.getLogin());
+            
+            vriendDB.verwijderenVriendschap(account.getLogin(), vriend.getLogin());
+            
+            Vriendschap ophaalVriendschap = vriendDB.zoekVriendschap(account.getLogin(), vriend.getLogin());
+            assertNull(ophaalVriendschap);
+            
+        }catch(DBException ex){
+            System.out.println("testVerwijderenVriendschap - " + ex);
+        }
     }
 }

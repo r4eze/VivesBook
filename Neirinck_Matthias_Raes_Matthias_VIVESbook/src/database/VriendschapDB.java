@@ -43,8 +43,7 @@ public class VriendschapDB implements InterfaceVriendschapDB
         }
         catch (SQLException ex)
         {
-            throw new DBException(
-              "SQL-exception in toevoegenVriendschap - connection - " + ex);
+            throw new DBException("SQL-exception in toevoegenVriendschap - connection - " + ex);
         }
     }
 
@@ -161,69 +160,8 @@ public class VriendschapDB implements InterfaceVriendschapDB
         }
         catch (SQLException ex)
         {
-            throw new DBException(
-                    "SQL-exception in zoekVrienden - connection - " + ex);
+            throw new DBException("SQL-exception in zoekVrienden - connection - " + ex);
         }
         return vrienden;
     }
-
-    /*
-    beter om te filteren in de interface laag
-    
-    public ArrayList<Account> zoekVrienden(String login, String zoek) throws DBException
-    {
-        ArrayList<Account> vrienden = new ArrayList<>();
-        if (zoek == null || zoek.equals(""))
-        {
-            vrienden = zoekVrienden(login);
-        }
-        else
-        {
-            try (Connection conn = ConnectionManager.getConnection();)
-            {
-                // preparedStatement opstellen (en automtisch sluiten)
-                try (PreparedStatement stmt = conn.prepareStatement(
-                        "select * from account where login in (select accountvriendlogin from vriendschap where accountlogin = ? and accountvriendlogin in (select login from account where voornaam like ? or naam like ?)) order by voornaam, naam");)
-                {
-                    stmt.setString(1, login);
-                    stmt.setString(2, "%" + zoek + "%");
-                    stmt.setString(3, "%" + zoek + "%");
-                    //System.out.println(stmt.toString()); => debugging purpose
-                    // execute voert het SQL-statement uit
-                    stmt.execute();
-                    // result opvragen (en automatisch sluiten)
-                    try (ResultSet r = stmt.getResultSet())
-                    {
-                        // van de post uit de database een Post-object maken
-                        while (r.next())
-                        {
-                            Account vriend = new Account();
-                            vriend.setLogin(r.getString("login"));
-                            vriend.setEmailadres(r.getString("emailadres"));
-                            vriend.setGeslacht(Geslacht.valueOf(r.getString("geslacht")));
-                            vriend.setNaam(r.getString("naam"));
-                            vriend.setVoornaam(r.getString("voornaam"));
-                            vrienden.add(vriend);
-                        }
-
-                        // er werd een vriendschap gevonden
-                    }
-                    catch (SQLException ex)
-                    {
-                        throw new DBException("SQL-exception in zoekFriend - resultset - " + ex);
-                    }
-                }
-                catch (SQLException ex)
-                {
-                    throw new DBException("SQL-exception in zoekFriend - statement - " + ex);
-                }
-            }
-            catch (SQLException ex)
-            {
-                throw new DBException(
-                        "SQL-exception in zoekVrienden - connection - " + ex);
-            }
-        }
-        return vrienden;
-    }*/
 }

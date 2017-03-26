@@ -90,6 +90,7 @@ public class Account implements Comparable<Account>{
         return "Account{" + "voornaam=" + voornaam + ", naam=" + naam + ", emailadres=" + emailadres + ", geslacht=" + geslacht + ", login=" + login + ", paswoord=" + paswoord + '}';
     }*/
     
+    // Returnt true als het account ingelogd is
     public boolean isLoggedIn()
     {
         return lastLogin.isAfter(lastLogout);
@@ -112,6 +113,8 @@ public class Account implements Comparable<Account>{
             return voornaam.compareTo(a.getVoornaam());
         }
     }
+    
+    // Returnt true als het account dezelfde waarden (behalve lastLogout en lastLogin) heeft als het account in de parameter
     public boolean equals(Account account)
     {
         return (this.getVoornaam().equals(account.getVoornaam()) && this.getNaam().equals(account.getNaam())

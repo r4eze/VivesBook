@@ -39,7 +39,7 @@ public class PostDBTest {
         accountdb.toevoegenAccount(account);
         }
         catch(DBException ex){
-            System.out.println("Database exception " + ex);
+            System.out.println("setUp - " + ex);
         }
         
 
@@ -52,7 +52,7 @@ public class PostDBTest {
             accountdb.verwijderenAccount(account);
         }
         catch(DBException e){
-            System.out.println("Database probleem " + e);
+            System.out.println("tearDown - " + e);
         }
     }
     
@@ -69,7 +69,7 @@ public class PostDBTest {
             assertEquals(post.getEigenaar(), account.getLogin());
         }
         catch(DBException ex){
-            System.out.println("Database probleem " + ex);
+            System.out.println("testPostToevoegen - " + ex);
         }
     }
     
@@ -85,7 +85,7 @@ public class PostDBTest {
             assertNull(terug);
         }
         catch(DBException ex){
-            System.out.println("Database probleem " + ex);
+            System.out.println("testPostVerwijderen - " + ex);
         }
     }
 
