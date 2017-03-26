@@ -22,7 +22,7 @@ public class LikeDB implements InterfaceLikesDB
             {
                 stat.setString(1, like.getAccountlogin());
                 stat.setInt(2, like.getPostid());
-                stat.setString(3, like.getType().name());
+                stat.setString(3, like.getType().name()); 
                 stat.execute();
             }
             catch (SQLException ex)
